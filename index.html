@@ -3,25 +3,272 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My GitHub Game</title>
+    <title>Ultimate Cookie Tycoon Pro</title>
     <style>
-        body { text-align: center; font-family: sans-serif; background: #eef2f3; padding-top: 50px; }
-        button { font-size: 20px; padding: 10px 20px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px; }
-        button:hover { background: #0056b3; }
-        h1 { color: #333; }
+        :root {
+            --bg-gradient: linear-gradient(135deg, #1e1e24, #111116);
+            --pane-bg: rgba(0, 0, 0, 0.3);
+            --sidebar-bg: #181824;
+            --border-color: #28283d;
+            --text-main: #ffffff;
+            --text-sub: #bdc3c7;
+            --item-bg: #252538;
+            --item-hover: #2e2e46;
+        }
+        .light-theme {
+            --bg-gradient: linear-gradient(135deg, #f5f7fa, #e4e8f0);
+            --pane-bg: rgba(255, 255, 255, 0.6);
+            --sidebar-bg: #ffffff;
+            --border-color: #d1d8e0;
+            --text-main: #2c3e50;
+            --text-sub: #7f8c8d;
+            --item-bg: #f1f2f6;
+            --item-hover: #e4e5ed;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            transition: background 0.3s, color 0.3s;
+        }
+        /* Left Panel */
+        .cookie-pane {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--pane-bg);
+            position: relative;
+        }
+        #cookie {
+            font-size: 140px;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.05s ease;
+            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.4));
+        }
+        #cookie:active { transform: scale(0.85); }
+        .stats { text-align: center; margin-bottom: 25px; z-index: 2; }
+        .stats h1 { font-size: 3rem; color: #f39c12; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .stats p { font-size: 1.2rem; color: var(--text-sub); margin-top: 5px; }
+        
+        .top-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .theme-btn {
+            background: #9b59b6;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .system-buttons {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        .sys-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+        .sys-btn.save { background: #2ecc71; }
+
+        /* Right Side Sidebar Panels */
+        .sidebar {
+            width: 420px;
+            background: var(--sidebar-bg);
+            border-left: 4px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .panel-section {
+            padding: 15px 20px;
+            overflow-y: auto;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .shop-pane { flex: 2; }
+        .leaderboard-pane { flex: 1.2; background: rgba(0,0,0,0.05); }
+        .achievements-pane { flex: 0.8; border-bottom: none; }
+
+        .section-header {
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            padding-bottom: 3px;
+            color: #e67e22;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Shop Upgrades */
+        .upgrade-item {
+            background: var(--item-bg);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        .upgrade-item:hover { background: var(--item-hover); border-color: #f1c40f; }
+        .upgrade-item.disabled { opacity: 0.4; cursor: not-allowed; border-color: transparent; }
+        .upgrade-item h3 { font-size: 1rem; display: flex; justify-content: space-between; }
+        .upgrade-item p { font-size: 0.8rem; color: var(--text-sub); margin-top: 3px; }
+        .price { color: #2ecc71; font-weight: bold; }
+        
+        /* Leaderboard Items */
+        .leaderboard-list { display: flex; flex-direction: column; gap: 8px; }
+        .leader-entry {
+            display: flex;
+            justify-content: space-between;
+            background: var(--item-bg);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        .leader-entry.player {
+            border: 2px solid #f1c40f;
+            background: linear-gradient(90deg, var(--item-bg), rgba(241, 196, 15, 0.1));
+            font-weight: bold;
+        }
+
+        /* Achievements Items */
+        .ach-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(55px, 1fr)); gap: 8px; }
+        .ach-badge {
+            background: var(--item-bg);
+            border-radius: 8px;
+            height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            filter: grayscale(100%);
+            opacity: 0.3;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .ach-badge.unlocked {
+            filter: grayscale(0%);
+            opacity: 1;
+            background: linear-gradient(135deg, #f39c12, #f1c40f);
+            box-shadow: 0 0 8px rgba(241, 196, 15, 0.3);
+        }
+        .ach-badge:hover::after {
+            content: attr(data-title);
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #000;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            z-index: 100;
+        }
+
+        /* Floating Text Effects */
+        .floating-text {
+            position: absolute;
+            color: #f1c40f;
+            font-weight: bold;
+            font-size: 1.6rem;
+            pointer-events: none;
+            animation: floatUp 0.8s ease-out forwards;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-120px) scale(0.8); }
+        }
+        #golden-cookie {
+            position: absolute;
+            font-size: 70px;
+            cursor: pointer;
+            z-index: 10;
+            display: none;
+            animation: pulse 1s infinite alternate;
+            filter: drop-shadow(0 0 15px #f1c40f);
+        }
+        @keyframes pulse { 0% { transform: scale(1); } 100% { transform: scale(1.2); } }
     </style>
 </head>
 <body>
-    <h1>Coin Clicker Game</h1>
-    <p>Score: <span id="score">0</span></p>
-    <button onclick="clickCoin()">Click Me!</button>
 
-    <script>
-        let score = 0;
-        function clickCoin() {
-            score++;
-            document.getElementById('score').innerText = score;
-        }
-    </script>
-</body>
-</html>
+    <!-- Game Left Panel -->
+    <div class="cookie-pane" id="cookie-pane">
+        <div class="top-controls">
+            <button class="theme-btn" onclick="toggleTheme()">🌗 Switch Theme</button>
+        </div>
+
+        <div class="stats">
+            <h1 id="cookie-count">0 Cookies</h1>
+            <p id="cps-display">per second: 0</p>
+        </div>
+        <div id="cookie" onclick="clickCookie(event)">🍪</div>
+        <div id="golden-cookie" onclick="clickGoldenCookie()">✨🍪✨</div>
+        
+        <div class="system-buttons">
+            <button class="sys-btn save" onclick="saveGame(true)">Manual Save</button>
+            <button class="sys-btn" onclick="resetGame()">Wipe Save</button>
+        </div>
+    </div>
+
+    <!-- Game Right Sidebar -->
+    <div class="sidebar">
+        <!-- Shop Section -->
+        <div class="panel-section shop-pane">
+            <div class="section-header">Upgrades Shop</div>
+            
+            <div class="upgrade-item" id="upg-clicker" onclick="buyUpgrade('clicker')">
+                <h3>Pointer Finger <span class="price" id="cost-clicker">15</span></h3>
+                <p>Autoclicks once every 10s (+0.1 CPS) | Owned: <span id="owned-clicker">0</span></p>
+            </div>
+
+            <div class="upgrade-item" id="upg-grandma" onclick="buyUpgrade('grandma')">
+                <h3>Grandma Bakery <span class="price" id="cost-grandma">100</span></h3>
+                <p>A lovely grandma baking treats (+1 CPS) | Owned: <span id="owned-grandma">0</span></p>
+            </div>
+
+            <div class="upgrade-item" id="upg-factory" onclick="buyUpgrade('factory')">
+                <h3>Cookie Factory <span class="price" id="cost-factory">1100</span></h3>
+                <p>Mass-produces baked goods (+8 CPS) | Owned: <span id="owned-factory">0</span></p>
+            </div>
+
+            <div class="upgrade-item" id="upg-portal" onclick="buyUpgrade('portal')">
+                <h3>Quantum Portal <span class="price" id="cost-portal">130000</span></h3>
+                <p>Opens a wormhole to the Cookieverse (+260 CPS) | Owned: <span id="owned-portal">0</span></p>
+            </div>
+
+            <div class="upgrade-item" id="upg-multiplier" onclick="buyUpgrade('multiplier')">
+                <h3>Sugar Rush (Clicker x2) <span class="price" id="cost-multiplier">500</span></h3>
+                <p>Doubles manual click strength | Level: <span id="owned-multiplier">1</span></p>
+            </div>
+        </div>
+
+        <!-- Leaderboard Section -->
+        <div class="panel-section leaderboard-pane">
+            <div class="section-header">Live Leaderboard</div>
+            <div class="leaderboard-list" id="leaderboard-container">
+                <!-- Dynamically loaded -->
+            </div>
