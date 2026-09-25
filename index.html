@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My GitHub Game</title>
+    <style>
+        body { text-align: center; font-family: sans-serif; background: #eef2f3; padding-top: 50px; }
+        button { font-size: 20px; padding: 10px 20px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px; }
+        button:hover { background: #0056b3; }
+        h1 { color: #333; }
+    </style>
+</head>
+<body>
+    <h1>Coin Clicker Game</h1>
+    <p>Score: <span id="score">0</span></p>
+    <button onclick="clickCoin()">Click Me!</button>
+
+    <script>
+        let score = 0;
+        function clickCoin() {
+            score++;
+            document.getElementById('score').innerText = score;
+        }
+    </script>
+</body>
+</html>
