@@ -3,272 +3,514 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Cookie Tycoon Pro</title>
+    <title>Star Clicker Deluxe</title>
     <style>
         :root {
-            --bg-gradient: linear-gradient(135deg, #1e1e24, #111116);
-            --pane-bg: rgba(0, 0, 0, 0.3);
-            --sidebar-bg: #181824;
-            --border-color: #28283d;
-            --text-main: #ffffff;
-            --text-sub: #bdc3c7;
-            --item-bg: #252538;
-            --item-hover: #2e2e46;
+            --bg-color: #0f172a;
+            --panel-color: #1e293b;
+            --accent-color: #eab308;
+            --text-color: #f8fafc;
         }
-        .light-theme {
-            --bg-gradient: linear-gradient(135deg, #f5f7fa, #e4e8f0);
-            --pane-bg: rgba(255, 255, 255, 0.6);
-            --sidebar-bg: #ffffff;
-            --border-color: #d1d8e0;
-            --text-main: #2c3e50;
-            --text-sub: #7f8c8d;
-            --item-bg: #f1f2f6;
-            --item-hover: #e4e5ed;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--bg-gradient);
-            color: var(--text-main);
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-            transition: background 0.3s, color 0.3s;
-        }
-        /* Left Panel */
-        .cookie-pane {
-            flex: 1;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            background: var(--pane-bg);
-            position: relative;
-        }
-        #cookie {
-            font-size: 140px;
-            cursor: pointer;
             user-select: none;
-            transition: transform 0.05s ease;
-            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.4));
         }
-        #cookie:active { transform: scale(0.85); }
-        .stats { text-align: center; margin-bottom: 25px; z-index: 2; }
-        .stats h1 { font-size: 3rem; color: #f39c12; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-        .stats p { font-size: 1.2rem; color: var(--text-sub); margin-top: 5px; }
-        
-        .top-controls {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-        }
-        .theme-btn {
-            background: #9b59b6;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .system-buttons {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            display: flex;
-            gap: 10px;
-        }
-        .sys-btn {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.8rem;
-        }
-        .sys-btn.save { background: #2ecc71; }
 
-        /* Right Side Sidebar Panels */
-        .sidebar {
-            width: 420px;
-            background: var(--sidebar-bg);
-            border-left: 4px solid var(--border-color);
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--accent-color);
+            margin: 0 0 10px 0;
+            font-size: 2.5rem;
+            text-shadow: 0 0 10px rgba(234, 179, 8, 0.3);
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background-color: var(--panel-color);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             display: flex;
             flex-direction: column;
-            height: 100%;
         }
-        .panel-section {
-            padding: 15px 20px;
-            overflow-y: auto;
-            border-bottom: 2px solid var(--border-color);
-        }
-        .shop-pane { flex: 2; }
-        .leaderboard-pane { flex: 1.2; background: rgba(0,0,0,0.05); }
-        .achievements-pane { flex: 0.8; border-bottom: none; }
 
-        .section-header {
-            font-size: 1.2rem;
-            margin-bottom: 12px;
-            padding-bottom: 3px;
-            color: #e67e22;
+        .click-section {
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        #score-display {
+            font-size: 2rem;
             font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            margin-bottom: 5px;
         }
-        
-        /* Shop Upgrades */
-        .upgrade-item {
-            background: var(--item-bg);
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 10px;
+
+        #sps-display {
+            font-size: 1.1rem;
+            color: #94a3b8;
+            margin-bottom: 30px;
+        }
+
+        #main-cookie {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, #fef08a 0%, #eab308 100%);
+            border-radius: 50%;
             cursor: pointer;
-            transition: all 0.2s;
-            border: 1px solid transparent;
+            box-shadow: 0 0 20px rgba(234, 179, 8, 0.5);
+            transition: transform 0.05s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            border: 5px solid #fef08a;
         }
-        .upgrade-item:hover { background: var(--item-hover); border-color: #f1c40f; }
-        .upgrade-item.disabled { opacity: 0.4; cursor: not-allowed; border-color: transparent; }
-        .upgrade-item h3 { font-size: 1rem; display: flex; justify-content: space-between; }
-        .upgrade-item p { font-size: 0.8rem; color: var(--text-sub); margin-top: 3px; }
-        .price { color: #2ecc71; font-weight: bold; }
-        
-        /* Leaderboard Items */
-        .leaderboard-list { display: flex; flex-direction: column; gap: 8px; }
-        .leader-entry {
+
+        #main-cookie:active {
+            transform: scale(0.95);
+        }
+
+        .shop-item, .achievement-item {
             display: flex;
             justify-content: space-between;
-            background: var(--item-bg);
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 0.9rem;
+            align-items: center;
+            background-color: #334155;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            transition: background-color 0.2s;
         }
-        .leader-entry.player {
-            border: 2px solid #f1c40f;
-            background: linear-gradient(90deg, var(--item-bg), rgba(241, 196, 15, 0.1));
+
+        .shop-item.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .shop-item:not(.disabled):hover {
+            background-color: #475569;
+            cursor: pointer;
+        }
+
+        .item-info h3 {
+            margin: 0 0 4px 0;
+            font-size: 1.1rem;
+        }
+
+        .item-info p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+        }
+
+        .item-cost {
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .tab-btn {
+            background-color: #334155;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
             font-weight: bold;
         }
 
-        /* Achievements Items */
-        .ach-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(55px, 1fr)); gap: 8px; }
-        .ach-badge {
-            background: var(--item-bg);
-            border-radius: 8px;
-            height: 55px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.6rem;
-            filter: grayscale(100%);
-            opacity: 0.3;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        .ach-badge.unlocked {
-            filter: grayscale(0%);
-            opacity: 1;
-            background: linear-gradient(135deg, #f39c12, #f1c40f);
-            box-shadow: 0 0 8px rgba(241, 196, 15, 0.3);
-        }
-        .ach-badge:hover::after {
-            content: attr(data-title);
-            position: absolute;
-            bottom: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #000;
-            color: #fff;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            white-space: nowrap;
-            z-index: 100;
+        .tab-btn.active {
+            background-color: var(--accent-color);
+            color: #0f172a;
         }
 
-        /* Floating Text Effects */
+        .tab-content {
+            display: none;
+            flex-grow: 1;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .achievement-item {
+            opacity: 0.4;
+            background-color: #1e293b;
+            border: 1px solid #334155;
+        }
+
+        .achievement-item.unlocked {
+            opacity: 1;
+            background-color: #065f46;
+            border-color: #34d399;
+        }
+
         .floating-text {
             position: absolute;
-            color: #f1c40f;
+            color: var(--accent-color);
             font-weight: bold;
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             pointer-events: none;
             animation: floatUp 0.8s ease-out forwards;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            text-shadow: 1px 1px 2px black;
         }
+
         @keyframes floatUp {
-            0% { opacity: 1; transform: translateY(0) scale(1); }
-            100% { opacity: 0; transform: translateY(-120px) scale(0.8); }
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-100px) scale(0.8); opacity: 0; }
         }
-        #golden-cookie {
-            position: absolute;
-            font-size: 70px;
-            cursor: pointer;
-            z-index: 10;
+
+        #powerup-bar {
+            width: 100%;
+            background-color: #334155;
+            height: 10px;
+            border-radius: 4px;
+            overflow: hidden;
             display: none;
-            animation: pulse 1s infinite alternate;
-            filter: drop-shadow(0 0 15px #f1c40f);
+            margin-top: 15px;
         }
-        @keyframes pulse { 0% { transform: scale(1); } 100% { transform: scale(1.2); } }
+
+        #powerup-progress {
+            width: 100%;
+            height: 100%;
+            background-color: #ec4899;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+        
+        #powerup-text {
+            font-size: 0.9rem;
+            color: #ec4899;
+            font-weight: bold;
+            margin-top: 20px;
+            display: none;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Game Left Panel -->
-    <div class="cookie-pane" id="cookie-pane">
-        <div class="top-controls">
-            <button class="theme-btn" onclick="toggleTheme()">🌗 Switch Theme</button>
+    <header>
+        <h1>STAR CLICKER</h1>
+        <p>Click the Star, gather Cosmic Power, rule the galaxy.</p>
+    </header>
+
+    <div class="container">
+        <!-- LEFT PANEL: CLICKER ZONE -->
+        <div class="panel click-section">
+            <div id="score-display">0 Stars</div>
+            <div id="sps-display">0 stars / sec</div>
+            
+            <div id="main-cookie">⭐</div>
+
+            <div id="powerup-text">☄️ METEOR SHOWER ACTIVE (2x Click Power!) ☄️</div>
+            <div id="powerup-bar"><div id="powerup-progress"></div></div>
         </div>
 
-        <div class="stats">
-            <h1 id="cookie-count">0 Cookies</h1>
-            <p id="cps-display">per second: 0</p>
-        </div>
-        <div id="cookie" onclick="clickCookie(event)">🍪</div>
-        <div id="golden-cookie" onclick="clickGoldenCookie()">✨🍪✨</div>
-        
-        <div class="system-buttons">
-            <button class="sys-btn save" onclick="saveGame(true)">Manual Save</button>
-            <button class="sys-btn" onclick="resetGame()">Wipe Save</button>
+        <!-- RIGHT PANEL: SHOP & UPGRADES -->
+        <div class="panel">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('shop')">Upgrades</button>
+                <button class="tab-btn" onclick="switchTab('achievements')">Achievements</button>
+            </div>
+
+            <!-- Shop List Container -->
+            <div id="shop-tab" class="tab-content active">
+                <div id="shop-container"></div>
+            </div>
+
+            <!-- Achievements List Container -->
+            <div id="achievements-tab" class="tab-content">
+                <div id="achievements-container"></div>
+            </div>
         </div>
     </div>
 
-    <!-- Game Right Sidebar -->
-    <div class="sidebar">
-        <!-- Shop Section -->
-        <div class="panel-section shop-pane">
-            <div class="section-header">Upgrades Shop</div>
+    <script>
+        // Tracking System Data
+        const state = {
+            stars: 0,
+            totalStarsEarned: 0,
+            clickPower: 1,
+            baseSps: 0,
+            multiplier: 1,
+            powerupActive: false,
+            powerupTimer: 0,
+            powerupDuration: 10000, 
+            upgrades: [
+                { id: 'cursor', name: 'Auto-Clicker', cost: 15, baseCost: 15, count: 0, sps: 0.2, desc: 'Clicks automatically once every 5 seconds.' },
+                { id: 'comet', name: 'Comet Miner', cost: 100, baseCost: 100, count: 0, sps: 1, desc: 'Mines passing cosmic debris.' },
+                { id: 'satellite', name: 'Star Satellites', cost: 1100, baseCost: 1100, count: 0, sps: 8, desc: 'Orbits stars to harvest energy.' },
+                { id: 'quantum', name: 'Quantum Core', cost: 12000, baseCost: 12000, count: 0, sps: 47, desc: 'Generates stars from the vacuum.' },
+                { id: 'click_boost', name: 'Photon Clicker', cost: 50, baseCost: 50, count: 0, sps: 0, isClickUpgrade: true, desc: '+1 star per manual click.' }
+            ],
+            achievements: [
+                { id: 'first_click', name: 'First Contact', desc: 'Click the Star once.', unlocked: false, condition: () => state.totalStarsEarned >= 1 },
+                { id: 'hundred', name: 'Stardust Collector', desc: 'Earn 100 total stars.', unlocked: false, condition: () => state.totalStarsEarned >= 100 },
+                { id: 'thousand', name: 'Cosmic Traveler', desc: 'Earn 1,000 total stars.', unlocked: false, condition: () => state.totalStarsEarned >= 1000 },
+                { id: 'ten_thousand', name: 'Galactic Emperor', desc: 'Earn 10,000 total stars.', unlocked: false, condition: () => state.totalStarsEarned >= 10000 },
+                { id: 'buyer', name: 'Investing in Space', desc: 'Buy your first upgrade.', unlocked: false, condition: () => state.upgrades.some(u => u.count > 0) }
+            ]
+        };
+
+        // Cache Document Target Nodes
+        const scoreDisplay = document.getElementById('score-display');
+        const spsDisplay = document.getElementById('sps-display');
+        const mainCookie = document.getElementById('main-cookie');
+        const shopContainer = document.getElementById('shop-container');
+        const achievementsContainer = document.getElementById('achievements-container');
+        const powerupText = document.getElementById('powerup-text');
+        const powerupBar = document.getElementById('powerup-bar');
+        const powerupProgress = document.getElementById('powerup-progress');
+        // Procedural Audio Engine
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            const now = audioCtx.currentTime;
+
+            if (type === 'click') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, now);
+                osc.frequency.exponentialRampToValueAtTime(800, now + 0.05);
+                gainNode.gain.setValueAtTime(0.3, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+                osc.start(now);
+                osc.stop(now + 0.08);
+            } else if (type === 'buy') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(300, now);
+                osc.frequency.setValueAtTime(450, now + 0.06);
+                osc.frequency.setValueAtTime(600, now + 0.12);
+                gainNode.gain.setValueAtTime(0.2, now);
+                gainNode.gain.linearRampToValueAtTime(0.2, now + 0.15);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                osc.start(now);
+                osc.stop(now + 0.25);
+            } else if (type === 'achievement') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(261.6, now); 
+                osc.frequency.setValueAtTime(329.6, now + 0.1); 
+                osc.frequency.setValueAtTime(392.0, now + 0.2); 
+                osc.frequency.setValueAtTime(523.3, now + 0.3); 
+                gainNode.gain.setValueAtTime(0.15, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+                osc.start(now);
+                osc.stop(now + 0.6);
+            } else if (type === 'powerup') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(100, now);
+                osc.frequency.exponentialRampToValueAtTime(1200, now + 0.4);
+                gainNode.gain.setValueAtTime(0.2, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                osc.start(now);
+                osc.stop(now + 0.4);
+            }
+        }
+        function getSps() {
+            return state.upgrades.reduce((acc, u) => acc + (u.count * u.sps), 0) * state.multiplier;
+        }
+
+        function updateUI() {
+            scoreDisplay.innerText = `${Math.floor(state.stars).toLocaleString()} Stars`;
+            spsDisplay.innerText = `${getSps().toFixed(1)} stars / sec`;
+            renderShop();
+            renderAchievements();
+        }
+
+        function createFloatingText(e, text) {
+            const rect = mainCookie.getBoundingClientRect();
+            let x = e ? e.clientX : rect.left + rect.width / 2;
+            let y = e ? e.clientY : rect.top + rect.height / 2;
+
+            const floatDiv = document.createElement('div');
+            floatDiv.className = 'floating-text';
+            floatDiv.innerText = text;
+            floatDiv.style.left = `${x - 10}px`;
+            floatDiv.style.top = `${y - 20}px`;
+            document.body.appendChild(floatDiv);
+
+            setTimeout(() => floatDiv.remove(), 800);
+        }
+
+        // Manual Click Handler
+        mainCookie.addEventListener('click', (e) => {
+            let gain = state.clickPower;
+            if (state.powerupActive) gain *= 2; 
+
+            state.stars += gain;
+            state.totalStarsEarned += gain;
             
-            <div class="upgrade-item" id="upg-clicker" onclick="buyUpgrade('clicker')">
-                <h3>Pointer Finger <span class="price" id="cost-clicker">15</span></h3>
-                <p>Autoclicks once every 10s (+0.1 CPS) | Owned: <span id="owned-clicker">0</span></p>
-            </div>
+            playSound('click');
+            createFloatingText(e, `+${gain}`);
+            checkAchievements();
+            updateUI();
 
-            <div class="upgrade-item" id="upg-grandma" onclick="buyUpgrade('grandma')">
-                <h3>Grandma Bakery <span class="price" id="cost-grandma">100</span></h3>
-                <p>A lovely grandma baking treats (+1 CPS) | Owned: <span id="owned-grandma">0</span></p>
-            </div>
+            if (!state.powerupActive && Math.random() < 0.02) {
+                triggerPowerup();
+            }
+        });
 
-            <div class="upgrade-item" id="upg-factory" onclick="buyUpgrade('factory')">
-                <h3>Cookie Factory <span class="price" id="cost-factory">1100</span></h3>
-                <p>Mass-produces baked goods (+8 CPS) | Owned: <span id="owned-factory">0</span></p>
-            </div>
+        function triggerPowerup() {
+            state.powerupActive = true;
+            state.powerupTimer = state.powerupDuration;
+            powerupText.style.display = 'block';
+            powerupBar.style.display = 'block';
+            playSound('powerup');
+        }
 
-            <div class="upgrade-item" id="upg-portal" onclick="buyUpgrade('portal')">
-                <h3>Quantum Portal <span class="price" id="cost-portal">130000</span></h3>
-                <p>Opens a wormhole to the Cookieverse (+260 CPS) | Owned: <span id="owned-portal">0</span></p>
-            </div>
+        function renderShop() {
+            shopContainer.innerHTML = '';
+            state.upgrades.forEach((upgrade, index) => {
+                const item = document.createElement('div');
+                const canAfford = state.stars >= upgrade.cost;
+                item.className = `shop-item ${canAfford ? '' : 'disabled'}`;
+                
+                item.innerHTML = `
+                    <div class="item-info">
+                        <h3>${upgrade.name} (${upgrade.count})</h3>
+                        <p>${upgrade.desc}</p>
+                    </div>
+                    <div class="item-cost">${Math.floor(upgrade.cost).toLocaleString()} ⭐</div>
+                `;
 
-            <div class="upgrade-item" id="upg-multiplier" onclick="buyUpgrade('multiplier')">
-                <h3>Sugar Rush (Clicker x2) <span class="price" id="cost-multiplier">500</span></h3>
-                <p>Doubles manual click strength | Level: <span id="owned-multiplier">1</span></p>
-            </div>
-        </div>
+                if (canAfford) {
+                    item.onclick = () => buyUpgrade(index);
+                }
+                shopContainer.appendChild(item);
+            });
+        }
 
-        <!-- Leaderboard Section -->
-        <div class="panel-section leaderboard-pane">
-            <div class="section-header">Live Leaderboard</div>
-            <div class="leaderboard-list" id="leaderboard-container">
-                <!-- Dynamically loaded -->
-            </div>
+        function buyUpgrade(index) {
+            const upgrade = state.upgrades[index];
+            if (state.stars >= upgrade.cost) {
+                state.stars -= upgrade.cost;
+                upgrade.count++;
+                
+                if (upgrade.isClickUpgrade) {
+                    state.clickPower += 1;
+                }
+                
+                upgrade.cost = upgrade.baseCost * Math.pow(1.15, upgrade.count);
+                
+                playSound('buy');
+                checkAchievements();
+                updateUI();
+            }
+        }
+
+        function renderAchievements() {
+            achievementsContainer.innerHTML = '';
+            state.achievements.forEach(ach => {
+                const item = document.createElement('div');
+                item.className = `achievement-item ${ach.unlocked ? 'unlocked' : ''}`;
+                item.innerHTML = `
+                    <div class="item-info">
+                        <h3>${ach.name} ${ach.unlocked ? '🏆' : '🔒'}</h3>
+                        <p>${ach.desc}</p>
+                    </div>
+                `;
+                achievementsContainer.appendChild(item);
+            });
+        }
+
+        function checkAchievements() {
+            state.achievements.forEach(ach => {
+                if (!ach.unlocked && ach.condition()) {
+                    ach.unlocked = true;
+                    playSound('achievement');
+                    createFloatingText(null, `🏆 UNLOCKED: ${ach.name}`);
+                }
+            });
+        }
+
+        window.switchTab = function(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            if (tabName === 'shop') {
+                document.querySelector('[onclick="switchTab(\'shop\')"]').classList.add('active');
+                document.getElementById('shop-tab').classList.add('active');
+            } else {
+                document.querySelector('[onclick="switchTab(\'achievements\')"]').classList.add('active');
+                document.getElementById('achievements-tab').classList.add('active');
+            }
+        }
+        // Engine Game Loop (Every 100ms)
+        let lastTick = Date.now();
+        setInterval(() => {
+            const now = Date.now();
+            const delta = (now - lastTick) / 1000;
+            lastTick = now;
+
+            const passiveGain = getSps() * delta;
+            state.stars += passiveGain;
+            state.totalStarsEarned += passiveGain;
+
+            if (state.powerupActive) {
+                state.powerupTimer -= delta * 1000;
+                const percentage = (state.powerupTimer / state.powerupDuration) * 100;
+                powerupProgress.style.width = `${percentage}%`;
+
+                if (state.powerupTimer <= 0) {
+                    state.powerupActive = false;
+                    powerupText.style.display = 'none';
+                    powerupBar.style.display = 'none';
+                }
+            }
+
+            checkAchievements();
+            scoreDisplay.innerText = `${Math.floor(state.stars).toLocaleString()} Stars`;
+        }, 100);
+
+        // Shop State Refresh Loop (Every 1000ms)
+        setInterval(() => {
+            renderShop();
+        }, 1000);
+
+        // Initialize App UI
+        updateUI();
+    </script>
+</body>
+</html>
