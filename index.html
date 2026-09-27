@@ -547,26 +547,56 @@ function sound(f = 600) {
 
     if (audio.state === 'suspended') audio.resume();
 
-    const oscillator = audio.createOscillator();
-    const gain = audio.createGain();
+    const now = audio.currentTime;
 
-    oscillator.type = 'sine';
-    oscillator.frequency.setValueAtTime(f, audio.currentTime);
-    oscillator.frequency.exponentialRampToValueAtTime(
-      f / 2,
-      audio.currentTime + .12
-    );
+    // Three overlapping notes create a futuristic sparkle.
+    const notes = [
+      { ratio: 1, delay: 0, volume: 0.045 },
+      { ratio: 1.5, delay: 0.035, volume: 0.025 },
+      { ratio: 2, delay: 0.07, volume: 0.015 }
+    ];
 
-    gain.gain.setValueAtTime(.06, audio.currentTime);
-    gain.gain.exponentialRampToValueAtTime(
-      .001,
-      audio.currentTime + .15
-    );
+    notes.forEach(note => {
+      const oscillator = audio.createOscillator();
+      const envelope = audio.createGain();
+      const start = now + note.delay;
+      const pitch = f * note.ratio;
 
-    oscillator.connect(gain);
-    gain.connect(audio.destination);
-    oscillator.start();
-    oscillator.stop(audio.currentTime + .16);
+      oscillator.type = 'sine';
+
+      // A quick upward sweep, then a gentle pitch drop.
+      oscillator.frequency.setValueAtTime(pitch * 0.7, start);
+      oscillator.frequency.exponentialRampToValueAtTime(
+        pitch,
+        start + 0.025
+      );
+      oscillator.frequency.exponentialRampToValueAtTime(
+        pitch * 0.9,
+        start + 0.25
+      );
+
+      // Fade in quickly and ring out smoothly.
+      envelope.gain.setValueAtTime(0, start);
+      envelope.gain.linearRampToValueAtTime(
+        note.volume,
+        start + 0.008
+      );
+      envelope.gain.exponentialRampToValueAtTime(
+        0.001,
+        start + 0.28
+      );
+
+      oscillator.connect(envelope);
+      envelope.connect(audio.destination);
+
+      oscillator.start(start);
+      oscillator.stop(start + 0.3);
+
+      oscillator.onended = () => {
+        oscillator.disconnect();
+        envelope.disconnect();
+      };
+    });
   } catch {}
 }
 
