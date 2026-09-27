@@ -1,517 +1,1162 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Star Clicker Deluxe</title>
-    <style>
-        :root {
-            --bg-color: #0f172a;
-            --panel-color: #1e293b;
-            --accent-color: #eab308;
-            --text-color: #f8fafc;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Stardust — Star Clicker</title>
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #080b1d;
+  --panel: #141a32;
+  --line: #2d3655;
+  --muted: #a5b3d4;
+  --cyan: #89f3ff;
+  --gold: #ffdd8b;
+}
+* { box-sizing: border-box; }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            user-select: none;
-        }
+body {
+  margin: 0;
+  background:
+    radial-gradient(ellipse at 15% 35%, #33205088, transparent 55%),
+    radial-gradient(ellipse at 85% 75%, #06445766, transparent 55%),
+    var(--bg);
+  color: #f3f5ff;
+  font: 15px/1.5 system-ui, sans-serif;
+  min-height: 100vh;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image:
+    radial-gradient(1px 1px at 20px 30px, #fff 90%, transparent),
+    radial-gradient(1px 1px at 90px 100px, #829cd5 90%, transparent);
+  background-size: 147px 173px, 211px 197px;
+  animation: sky 70s linear infinite;
+}
+@keyframes sky {
+  to { transform: translateY(-80px); }
+}
+button {
+  font: inherit;
+  color: inherit;
+  border: 1px solid var(--line);
+  background: #222b47;
+  border-radius: 12px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background .15s, transform .15s;
+}
+button:hover:not(:disabled) { background: #334263; }
+button:active:not(:disabled) { transform: scale(.97); }
+button:disabled { opacity: .4; cursor: not-allowed; }
+button:focus-visible {
+  outline: 3px solid var(--cyan);
+  outline-offset: 4px;
+}
+header, main, footer {
+  max-width: 1240px;
+  margin: auto;
+  padding: 22px;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+h1 { font-size: 25px; letter-spacing: 3px; margin: 0; }
+h2 { font-size: 18px; margin: 0 0 14px; }
+p { margin: 8px 0; }
+.eyebrow {
+  color: var(--cyan);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.muted, small { color: var(--muted); }
+.tools, .buybar { display: flex; gap: 8px; flex-wrap: wrap; }
+.tools button { font-size: 12px; }
 
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+main {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 20px;
+  padding-top: 0;
+}
+.panel {
+  background: linear-gradient(135deg, #1b2340dd, #10162ddd);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 22px;
+  box-shadow: 0 20px 60px #0002;
+}
+.left { display: flex; flex-direction: column; gap: 20px; }
+.hero { text-align: center; overflow: hidden; position: relative; }
+.balance {
+  font-size: clamp(34px, 5vw, 55px);
+  font-weight: 800;
+  letter-spacing: -2px;
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+}
+.stats { display: flex; justify-content: center; gap: 30px; }
+.stats b { display: block; color: var(--cyan); font-size: 20px; }
 
-        h1 {
-            color: var(--accent-color);
-            margin: 0 0 10px 0;
-            font-size: 2.5rem;
-            text-shadow: 0 0 10px rgba(234, 179, 8, 0.3);
-        }
+.starfield {
+  height: 300px;
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+.orbit {
+  position: absolute;
+  width: 270px;
+  height: 270px;
+  border: 1px solid #86dfff22;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: spin 35s linear infinite;
+}
+.orbit::after {
+  content: "";
+  position: absolute;
+  top: 38px;
+  left: 38px;
+  background: var(--cyan);
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  box-shadow: 0 0 16px var(--cyan);
+}
+.orbit.second {
+  width: 220px;
+  height: 220px;
+  animation-direction: reverse;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
-        .container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            max-width: 1000px;
-            width: 100%;
-        }
+#star {
+  border: 0;
+  background: none;
+  padding: 0;
+  width: 210px;
+  height: 210px;
+  filter: drop-shadow(0 0 30px #ffb84a88);
+  touch-action: manipulation;
+  z-index: 1;
+}
+#star:hover {
+  background: none;
+  filter: drop-shadow(0 0 45px #ffcc77cc);
+}
+#star svg {
+  width: 100%;
+  height: 100%;
+  animation: pulse 3s ease-in-out infinite;
+}
+#star:active { transform: scale(.9); }
+@keyframes pulse { 50% { transform: scale(1.06); } }
 
-        @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .panel {
-            background-color: var(--panel-color);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .click-section {
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        #score-display {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        #sps-display {
-            font-size: 1.1rem;
-            color: #94a3b8;
-            margin-bottom: 30px;
-        }
-
-        #main-cookie {
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, #fef08a 0%, #eab308 100%);
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 0 20px rgba(234, 179, 8, 0.5);
-            transition: transform 0.05s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 5rem;
-            border: 5px solid #fef08a;
-        }
-
-        #main-cookie:active {
-            transform: scale(0.95);
-        }
-
-        .shop-item, .achievement-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #334155;
-            padding: 12px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            transition: background-color 0.2s;
-        }
-
-        .shop-item.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .shop-item:not(.disabled):hover {
-            background-color: #475569;
-            cursor: pointer;
-        }
-
-        .item-info h3 {
-            margin: 0 0 4px 0;
-            font-size: 1.1rem;
-        }
-
-        .item-info p {
-            margin: 0;
-            font-size: 0.85rem;
-            color: #cbd5e1;
-        }
-
-        .item-cost {
-            font-weight: bold;
-            color: var(--accent-color);
-        }
-
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .tab-btn {
-            background-color: #334155;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .tab-btn.active {
-            background-color: var(--accent-color);
-            color: #0f172a;
-        }
-
-        .tab-content {
-            display: none;
-            flex-grow: 1;
-            max-height: 400px;
-            overflow-y: auto;
-            padding-right: 5px;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .achievement-item {
-            opacity: 0.4;
-            background-color: #1e293b;
-            border: 1px solid #334155;
-        }
-
-        .achievement-item.unlocked {
-            opacity: 1;
-            background-color: #065f46;
-            border-color: #34d399;
-        }
-
-        .floating-text {
-            position: absolute;
-            color: var(--accent-color);
-            font-weight: bold;
-            font-size: 1.5rem;
-            pointer-events: none;
-            animation: floatUp 0.8s ease-out forwards;
-            text-shadow: 1px 1px 2px black;
-        }
-
-        @keyframes floatUp {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-100px) scale(0.8); opacity: 0; }
-        }
-
-        #powerup-bar {
-            width: 100%;
-            background-color: #334155;
-            height: 10px;
-            border-radius: 4px;
-            overflow: hidden;
-            display: none;
-            margin-top: 15px;
-        }
-
-        #powerup-progress {
-            width: 100%;
-            height: 100%;
-            background-color: #ec4899;
-            width: 0%;
-            transition: width 0.1s linear;
-        }
-        
-        #powerup-text {
-            font-size: 0.9rem;
-            color: #ec4899;
-            font-weight: bold;
-            margin-top: 20px;
-            display: none;
-            text-align: center;
-        }
-    </style>
+.float {
+  position: fixed;
+  pointer-events: none;
+  z-index: 20;
+  font-weight: bold;
+  color: var(--gold);
+  animation: rise .85s ease-out forwards;
+}
+@keyframes rise {
+  to {
+    transform: translate(var(--dx, 0px), -95px);
+    opacity: 0;
+  }
+}
+.shop-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #0b112a66;
+}
+.icon { font-size: 27px; width: 38px; text-align: center; }
+.details { flex: 1; min-width: 0; }
+.details b { display: block; }
+.details small { font-size: 12px; display: block; }
+.owned { color: var(--cyan); font-size: 20px; font-weight: bold; }
+.shop-item button { font-size: 13px; min-width: 90px; }
+.buybar { align-items: center; margin-bottom: 16px; }
+.buybar span {
+  margin-right: auto;
+  color: var(--muted);
+  font-size: 12px;
+}
+.selected {
+  border-color: var(--cyan);
+  color: var(--cyan);
+  background: #174052;
+}
+.upgrade {
+  width: 100%;
+  text-align: left;
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.upgrade small { display: block; }
+.upgrade strong { white-space: nowrap; color: var(--gold); }
+.section {
+  margin-top: 23px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+.badges {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.badge {
+  border: 1px solid var(--line);
+  padding: 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.badge.unlocked {
+  border-color: #7aa4a9;
+  color: var(--gold);
+  background: #26454a55;
+}
+.badge b { display: block; }
+.prestige { background: linear-gradient(120deg, #38204c, #171b38); }
+.prestige button {
+  background: #663c87;
+  border-color: #b68bdb;
+  width: 100%;
+  margin-top: 12px;
+}
+.progress {
+  height: 7px;
+  border-radius: 5px;
+  background: #070c21;
+  overflow: hidden;
+  margin: 12px 0;
+}
+.progress div {
+  height: 100%;
+  background: linear-gradient(90deg, #bc8fff, #89f3ff);
+}
+#comet {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  z-index: 15;
+  background: #fff0a9;
+  color: #2b2144;
+  border: 2px solid white;
+  box-shadow: 0 0 45px #ffcf7b;
+  animation: pulse 1s infinite;
+  font-weight: bold;
+}
+#comet[hidden] { display: none; }
+#toasts {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 30;
+  max-width: min(370px, 90vw);
+  pointer-events: none;
+}
+.toast {
+  background: #283853;
+  border: 1px solid #84b1bb;
+  padding: 12px 16px;
+  border-radius: 12px;
+  margin-top: 8px;
+  box-shadow: 0 10px 30px #0005;
+}
+footer {
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+  padding-top: 0;
+}
+#status {
+  min-height: 20px;
+  font-size: 12px;
+  color: var(--muted);
+}
+@media (max-width: 800px) {
+  main { grid-template-columns: 1fr; }
+  header, main { padding: 14px; }
+  .panel { padding: 18px; }
+  .starfield { height: 265px; }
+  .tools { gap: 5px; }
+  .tools button { padding: 8px; }
+  .shop-item { gap: 8px; }
+  .icon { width: 29px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before {
+    animation: none !important;
+    transition: none !important;
+  }
+  .float { display: none; }
+}
+</style>
 </head>
 <body>
 
-    <header>
-        <h1>STAR CLICKER</h1>
-        <p>Click the Star, gather Cosmic Power, rule the galaxy.</p>
-    </header>
+<header>
+  <div>
+    <div class="eyebrow">An idle expedition</div>
+    <h1>✦ STARDUST</h1>
+  </div>
+  <div class="tools">
+    <button id="sound" aria-pressed="false">Sound: off</button>
+    <button id="save">Save</button>
+    <button id="export">Export</button>
+    <button id="import">Import</button>
+    <button id="reset">Reset</button>
+  </div>
+</header>
 
-    <div class="container">
-        <!-- LEFT PANEL: CLICKER ZONE -->
-        <div class="panel click-section">
-            <div id="score-display">0 Stars</div>
-            <div id="sps-display">0 stars / sec</div>
-            
-            <div id="main-cookie">⭐</div>
+<main>
+  <div class="left">
+    <section class="panel hero">
+      <div class="eyebrow">Your cosmic treasury</div>
+      <div class="balance" id="dust">0</div>
+      <div class="muted">Stardust</div>
 
-            <div id="powerup-text">☄️ METEOR SHOWER ACTIVE (2x Click Power!) ☄️</div>
-            <div id="powerup-bar"><div id="powerup-progress"></div></div>
-        </div>
+      <div class="starfield">
+        <div class="orbit"></div>
+        <div class="orbit second"></div>
 
-        <!-- RIGHT PANEL: SHOP & UPGRADES -->
-        <div class="panel">
-            <div class="tabs">
-                <button class="tab-btn active" onclick="switchTab('shop')">Upgrades</button>
-                <button class="tab-btn" onclick="switchTab('achievements')">Achievements</button>
-            </div>
+        <button id="star" aria-label="Click star to collect Stardust">
+          <svg viewBox="0 0 200 200" aria-hidden="true">
+            <defs>
+              <radialGradient id="gold" cx="40%" cy="35%" r="70%">
+                <stop stop-color="#fffce3"/>
+                <stop offset=".5" stop-color="#ffdf7a"/>
+                <stop offset="1" stop-color="#f39335"/>
+              </radialGradient>
+            </defs>
+            <path
+              d="M100 12 126 68 187 76 142 119 153 181 100 151 47 181 58 119 13 76 74 68Z"
+              fill="url(#gold)"
+              stroke="#fff2b2"
+              stroke-width="2"
+            />
+          </svg>
+        </button>
+      </div>
 
-            <!-- Shop List Container -->
-            <div id="shop-tab" class="tab-content active">
-                <div id="shop-container"></div>
-            </div>
+      <div class="stats">
+        <div><b id="clickPower">1</b><small>per click</small></div>
+        <div><b id="rate">0</b><small>per second</small></div>
+      </div>
 
-            <!-- Achievements List Container -->
-            <div id="achievements-tab" class="tab-content">
-                <div id="achievements-container"></div>
-            </div>
-        </div>
+      <p class="muted">A little spark. An entire universe.</p>
+      <div id="status" role="status">Progress saves automatically.</div>
+    </section>
+
+    <section class="panel prestige">
+      <div class="eyebrow">Begin again, burn brighter</div>
+      <h2>Supernova</h2>
+      <p id="coreInfo"></p>
+      <small>
+        Each core permanently adds 10% to clicks and production.
+        Supernova resets your Stardust, generators, upgrades, and run
+        earnings. Achievements stay.
+      </small>
+      <div class="progress"><div id="progress"></div></div>
+      <small id="prestigeInfo"></small>
+      <button id="prestige">Trigger Supernova</button>
+    </section>
+
+    <section class="panel">
+      <h2>Mission log <small id="achievementCount"></small></h2>
+      <small>
+        Each unlocked achievement permanently adds 2% to all earnings.
+      </small>
+      <div class="badges" id="achievements" style="margin-top:14px"></div>
+      <p class="muted" id="lifetime"></p>
+    </section>
+  </div>
+
+  <section class="panel">
+    <div class="eyebrow">Build your constellation</div>
+    <h2>Orbital industry</h2>
+
+    <div class="buybar">
+      <span>Purchase quantity</span>
+      <button class="selected" data-qty="1" aria-pressed="true">1</button>
+      <button data-qty="10" aria-pressed="false">10</button>
+      <button data-qty="max" aria-pressed="false">Max</button>
     </div>
 
-    <script>
-        // Tracking System Data
-        const state = {
-            stars: 0,
-            totalStarsEarned: 0,
-            clickPower: 1,
-            baseSps: 0,
-            multiplier: 1,
-            powerupActive: false,
-            powerupTimer: 0,
-            powerupDuration: 10000, 
-            upgrades: [
-                { id: 'cursor', name: 'Auto-Clicker', cost: 15, baseCost: 15, count: 0, sps: 0.2, desc: 'Clicks automatically once every 5 seconds.' },
-                { id: 'comet', name: 'Comet Miner', cost: 100, baseCost: 100, count: 0, sps: 1, desc: 'Mines passing cosmic debris.' },
-                { id: 'satellite', name: 'Star Satellites', cost: 1100, baseCost: 1100, count: 0, sps: 8, desc: 'Orbits stars to harvest energy.' },
-                { id: 'quantum', name: 'Quantum Core', cost: 12000, baseCost: 12000, count: 0, sps: 47, desc: 'Generates stars from the vacuum.' },
-                { id: 'click_boost', name: 'Photon Clicker', cost: 50, baseCost: 50, count: 0, sps: 0, isClickUpgrade: true, desc: '+1 star per manual click.' }
-                { id: 'Planet', name: 'Planetary devestation', cost: 20000, baseCost: 20000, count: 0, sps: 100, desc: 'Destroyer of Worlds' },
-            ],
-            achievements: [
-                { id: 'first_click', name: 'First Contact', desc: 'Click the Star once.', unlocked: false, condition: () => state.totalStarsEarned >= 1 },
-                { id: 'hundred', name: 'Stardust Collector', desc: 'Earn 100 total stars.', unlocked: false, condition: () => state.totalStarsEarned >= 100 },
-                { id: 'thousand', name: 'Cosmic Traveler', desc: 'Earn 1,000 total stars.', unlocked: false, condition: () => state.totalStarsEarned >= 1000 },
-                { id: 'ten_thousand', name: 'Galactic Emperor', desc: 'Earn 10,000 total stars.', unlocked: false, condition: () => state.totalStarsEarned >= 10000 },
-                { id: 'buyer', name: 'Investing in Space', desc: 'Buy your first upgrade.', unlocked: false, condition: () => state.upgrades.some(u => u.count > 0) }
-            ]
-        };
+    <div id="generators"></div>
 
-        // Cache Document Target Nodes
-        const scoreDisplay = document.getElementById('score-display');
-        const spsDisplay = document.getElementById('sps-display');
-        const mainCookie = document.getElementById('main-cookie');
-        const shopContainer = document.getElementById('shop-container');
-        const achievementsContainer = document.getElementById('achievements-container');
-        const powerupText = document.getElementById('powerup-text');
-        const powerupBar = document.getElementById('powerup-bar');
-        const powerupProgress = document.getElementById('powerup-progress');
-        // Procedural Audio Engine
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    <div class="section">
+      <h2>Research lab</h2>
+      <small>
+        Click research doubles your base click power.
+        Industry research doubles that generator's output.
+      </small>
+      <div id="upgrades"></div>
+    </div>
+  </section>
+</main>
 
-        function playSound(type) {
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
+<footer>
+  Offline production: 100% for up to 8 hours.
+  Shooting stars appear while you play.
+  Export a backup before changing browsers.
+</footer>
 
-            const osc = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            osc.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
+<button id="comet" hidden
+  title="Catch this shooting star for a Stardust bonus!">
+  ☄ Catch me!
+</button>
 
-            const now = audioCtx.currentTime;
+<div id="toasts" role="status" aria-live="polite"></div>
+<input id="file" type="file" accept="application/json,.json" hidden>
 
-            if (type === 'click') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(400, now);
-                osc.frequency.exponentialRampToValueAtTime(800, now + 0.05);
-                gainNode.gain.setValueAtTime(0.3, now);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
-                osc.start(now);
-                osc.stop(now + 0.08);
-            } else if (type === 'buy') {
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(300, now);
-                osc.frequency.setValueAtTime(450, now + 0.06);
-                osc.frequency.setValueAtTime(600, now + 0.12);
-                gainNode.gain.setValueAtTime(0.2, now);
-                gainNode.gain.linearRampToValueAtTime(0.2, now + 0.15);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
-                osc.start(now);
-                osc.stop(now + 0.25);
-            } else if (type === 'achievement') {
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(261.6, now); 
-                osc.frequency.setValueAtTime(329.6, now + 0.1); 
-                osc.frequency.setValueAtTime(392.0, now + 0.2); 
-                osc.frequency.setValueAtTime(523.3, now + 0.3); 
-                gainNode.gain.setValueAtTime(0.15, now);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
-                osc.start(now);
-                osc.stop(now + 0.6);
-            } else if (type === 'powerup') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(100, now);
-                osc.frequency.exponentialRampToValueAtTime(1200, now + 0.4);
-                gainNode.gain.setValueAtTime(0.2, now);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
-                osc.start(now);
-                osc.stop(now + 0.4);
-            }
-        }
-        function getSps() {
-            return state.upgrades.reduce((acc, u) => acc + (u.count * u.sps), 0) * state.multiplier;
-        }
+<script>
+'use strict';
 
-        function updateUI() {
-            scoreDisplay.innerText = `${Math.floor(state.stars).toLocaleString()} Stars`;
-            spsDisplay.innerText = `${getSps().toFixed(1)} stars / sec`;
-            renderShop();
-            renderAchievements();
-        }
+const KEY = 'stardust-clicker-v1';
+const CAP = 1e100;
+const $ = id => document.getElementById(id);
 
-        function createFloatingText(e, text) {
-            const rect = mainCookie.getBoundingClientRect();
-            let x = e ? e.clientX : rect.left + rect.width / 2;
-            let y = e ? e.clientY : rect.top + rect.height / 2;
+const buildings = [
+  ['🛰', 'Satellite',       15,        0.1],
+  ['🌙', 'Lunar mine',      100,       1],
+  ['🚀', 'Space station',   1100,      8],
+  ['☀', 'Dyson swarm',     12000,     47],
+  ['🪐', 'Planet forge',    130000,    260],
+  ['🌀', 'Wormhole',        1400000,   1400],
+  ['🌌', 'Galaxy',          20000000,  7800],
+  ['✦', 'Universe engine', 330000000, 44000]
+];
 
-            const floatDiv = document.createElement('div');
-            floatDiv.className = 'floating-text';
-            floatDiv.innerText = text;
-            floatDiv.style.left = `${x - 10}px`;
-            floatDiv.style.top = `${y - 20}px`;
-            document.body.appendChild(floatDiv);
+const fresh = () => ({
+  version: 1,
+  dust: 0,
+  run: 0,
+  total: 0,
+  clicks: 0,
+  caught: 0,
+  cores: 0,
+  resets: 0,
+  counts: buildings.map(() => 0),
+  levels: buildings.map(() => 0),
+  tap: 0,
+  ach: [],
+  sound: false,
+  saved: Date.now()
+});
 
-            setTimeout(() => floatDiv.remove(), 800);
-        }
+let s = fresh();
+let qty = '1';
+let audio;
+let storageWarned = false;
+let last = Date.now();
+let nextComet = last + 45000 + Math.random() * 45000;
+let cometUntil = 0;
 
-        // Manual Click Handler
-        mainCookie.addEventListener('click', (e) => {
-            let gain = state.clickPower;
-            if (state.powerupActive) gain *= 2; 
+const missions = [
+  ['First light', 'Click your star once.', () => s.clicks >= 1],
+  ['Stargazer', 'Click 100 times.', () => s.clicks >= 100],
+  ['Starstruck', 'Click 1,000 times.', () => s.clicks >= 1000],
+  ['First orbit', 'Own a generator.', () => s.counts.some(n => n > 0)],
+  [
+    'Fleet commander',
+    'Own 50 generators at once.',
+    () => s.counts.reduce((a, b) => a + b, 0) >= 50
+  ],
+  ['Cosmic dust', 'Earn 10,000 total Stardust.', () => s.total >= 1e4],
+  ['Million suns', 'Earn 1 million total Stardust.', () => s.total >= 1e6],
+  ['Billion lights', 'Earn 1 billion total Stardust.', () => s.total >= 1e9],
+  ['Comet catcher', 'Catch a shooting star.', () => s.caught >= 1],
+  ['Reborn', 'Trigger a Supernova.', () => s.resets >= 1]
+];
 
-            state.stars += gain;
-            state.totalStarsEarned += gain;
-            
-            playSound('click');
-            createFloatingText(e, `+${gain}`);
-            checkAchievements();
-            updateUI();
+function fmt(n) {
+  if (n < 1000) {
+    return n.toLocaleString('en-US', {
+      maximumFractionDigits: n < 10 ? 1 : 0
+    });
+  }
 
-            if (!state.powerupActive && Math.random() < 0.02) {
-                triggerPowerup();
-            }
-        });
+  const i = Math.floor(Math.log10(n) / 3);
+  const units = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No'];
 
-        function triggerPowerup() {
-            state.powerupActive = true;
-            state.powerupTimer = state.powerupDuration;
-            powerupText.style.display = 'block';
-            powerupBar.style.display = 'block';
-            playSound('powerup');
-        }
+  return i < units.length
+    ? (n / 1000 ** i).toFixed(2) + ' ' + units[i]
+    : n.toExponential(2);
+}
 
-        function renderShop() {
-            shopContainer.innerHTML = '';
-            state.upgrades.forEach((upgrade, index) => {
-                const item = document.createElement('div');
-                const canAfford = state.stars >= upgrade.cost;
-                item.className = `shop-item ${canAfford ? '' : 'disabled'}`;
-                
-                item.innerHTML = `
-                    <div class="item-info">
-                        <h3>${upgrade.name} (${upgrade.count})</h3>
-                        <p>${upgrade.desc}</p>
-                    </div>
-                    <div class="item-cost">${Math.floor(upgrade.cost).toLocaleString()} ⭐</div>
-                `;
+function mult() {
+  return (1 + s.cores * .1) * (1 + s.ach.length * .02);
+}
 
-                if (canAfford) {
-                    item.onclick = () => buyUpgrade(index);
-                }
-                shopContainer.appendChild(item);
-            });
-        }
+function cps() {
+  return buildings.reduce(
+    (value, building, i) =>
+      value + building[3] * s.counts[i] * 2 ** s.levels[i],
+    0
+  ) * mult();
+}
 
-        function buyUpgrade(index) {
-            const upgrade = state.upgrades[index];
-            if (state.stars >= upgrade.cost) {
-                state.stars -= upgrade.cost;
-                upgrade.count++;
-                
-                if (upgrade.isClickUpgrade) {
-                    state.clickPower += 1;
-                }
-                
-                upgrade.cost = upgrade.baseCost * Math.pow(1.15, upgrade.count);
-                
-                playSound('buy');
-                checkAchievements();
-                updateUI();
-            }
-        }
+function power() {
+  return 2 ** s.tap * mult();
+}
 
-        function renderAchievements() {
-            achievementsContainer.innerHTML = '';
-            state.achievements.forEach(ach => {
-                const item = document.createElement('div');
-                item.className = `achievement-item ${ach.unlocked ? 'unlocked' : ''}`;
-                item.innerHTML = `
-                    <div class="item-info">
-                        <h3>${ach.name} ${ach.unlocked ? '🏆' : '🔒'}</h3>
-                        <p>${ach.desc}</p>
-                    </div>
-                `;
-                achievementsContainer.appendChild(item);
-            });
-        }
+function earn(n) {
+  n = Math.max(0, Math.min(CAP, n));
+  s.dust = Math.min(CAP, s.dust + n);
+  s.run = Math.min(CAP, s.run + n);
+  s.total = Math.min(CAP, s.total + n);
+}
 
-        function checkAchievements() {
-            state.achievements.forEach(ach => {
-                if (!ach.unlocked && ach.condition()) {
-                    ach.unlocked = true;
-                    playSound('achievement');
-                    createFloatingText(null, `🏆 UNLOCKED: ${ach.name}`);
-                }
-            });
-        }
+function toast(message) {
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = message;
+  $('toasts').append(el);
+  setTimeout(() => el.remove(), 4500);
+}
 
-        window.switchTab = function(tabName) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+function sound(f = 600) {
+  if (!s.sound) return;
 
-            if (tabName === 'shop') {
-                document.querySelector('[onclick="switchTab(\'shop\')"]').classList.add('active');
-                document.getElementById('shop-tab').classList.add('active');
-            } else {
-                document.querySelector('[onclick="switchTab(\'achievements\')"]').classList.add('active');
-                document.getElementById('achievements-tab').classList.add('active');
-            }
-        }
-        // Engine Game Loop (Every 100ms)
-        let lastTick = Date.now();
-        setInterval(() => {
-            const now = Date.now();
-            const delta = (now - lastTick) / 1000;
-            lastTick = now;
+  try {
+    audio ??= new (
+      window.AudioContext || window.webkitAudioContext
+    )();
 
-            const passiveGain = getSps() * delta;
-            state.stars += passiveGain;
-            state.totalStarsEarned += passiveGain;
+    if (audio.state === 'suspended') audio.resume();
 
-            if (state.powerupActive) {
-                state.powerupTimer -= delta * 1000;
-                const percentage = (state.powerupTimer / state.powerupDuration) * 100;
-                powerupProgress.style.width = `${percentage}%`;
+    const oscillator = audio.createOscillator();
+    const gain = audio.createGain();
 
-                if (state.powerupTimer <= 0) {
-                    state.powerupActive = false;
-                    powerupText.style.display = 'none';
-                    powerupBar.style.display = 'none';
-                }
-            }
+    oscillator.type = 'sine';
+    oscillator.frequency.setValueAtTime(f, audio.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(
+      f / 2,
+      audio.currentTime + .12
+    );
 
-            checkAchievements();
-            scoreDisplay.innerText = `${Math.floor(state.stars).toLocaleString()} Stars`;
-        }, 100);
+    gain.gain.setValueAtTime(.06, audio.currentTime);
+    gain.gain.exponentialRampToValueAtTime(
+      .001,
+      audio.currentTime + .15
+    );
 
-        // Shop State Refresh Loop (Every 1000ms)
-        setInterval(() => {
-            renderShop();
-        }, 1000);
+    oscillator.connect(gain);
+    gain.connect(audio.destination);
+    oscillator.start();
+    oscillator.stop(audio.currentTime + .16);
+  } catch {}
+}
 
-        // Initialize App UI
-        updateUI();
-    </script>
+function check() {
+  missions.forEach((mission, i) => {
+    if (!s.ach.includes(i) && mission[2]()) {
+      s.ach.push(i);
+      toast('Achievement: ' + mission[0] + ' — +2% earnings');
+      sound(900);
+    }
+  });
+}
+
+function advance() {
+  const now = Date.now();
+  const elapsed = Math.min(28800, Math.max(0, (now - last) / 1000));
+
+  earn(cps() * elapsed);
+  last = now;
+  check();
+}
+
+function save(announce = false) {
+  s.saved = Date.now();
+
+  try {
+    localStorage.setItem(KEY, JSON.stringify(s));
+    $('status').textContent =
+      'Saved ' + new Date(s.saved).toLocaleTimeString();
+
+    if (announce) toast('Progress saved.');
+  } catch {
+    if (!storageWarned) {
+      toast('Browser saving is unavailable. Use Export to keep your progress.');
+      storageWarned = true;
+    }
+
+    $('status').textContent = 'Auto-save unavailable. Export your progress.';
+  }
+}
+
+function valid(data) {
+  if (!data || data.version !== 1) {
+    throw Error('Unsupported save');
+  }
+
+  const out = fresh();
+
+  for (const key of [
+    'dust', 'run', 'total', 'clicks', 'caught',
+    'cores', 'resets', 'tap', 'saved'
+  ]) {
+    if (
+      typeof data[key] !== 'number' ||
+      !Number.isFinite(data[key]) ||
+      data[key] < 0 ||
+      data[key] > CAP
+    ) {
+      throw Error('Invalid save');
+    }
+
+    out[key] = data[key];
+  }
+
+  for (const key of ['clicks', 'caught', 'cores', 'resets', 'tap']) {
+    if (!Number.isSafeInteger(out[key])) {
+      throw Error('Invalid counter');
+    }
+  }
+
+  if (out.tap > 50 || out.cores > 1e9) {
+    throw Error('Invalid level');
+  }
+
+  for (const key of ['counts', 'levels']) {
+    if (
+      !Array.isArray(data[key]) ||
+      data[key].length !== buildings.length ||
+      data[key].some(n =>
+        !Number.isInteger(n) ||
+        n < 0 ||
+        n > (key === 'levels' ? 30 : 1500)
+      )
+    ) {
+      throw Error('Invalid industry');
+    }
+
+    out[key] = data[key].slice();
+  }
+
+  if (
+    !Array.isArray(data.ach) ||
+    data.ach.some(n =>
+      !Number.isInteger(n) || n < 0 || n >= missions.length
+    )
+  ) {
+    throw Error('Invalid achievements');
+  }
+
+  out.ach = [...new Set(data.ach)];
+  out.sound = data.sound === true;
+  return out;
+}
+
+function offline() {
+  const seconds = Math.min(
+    28800,
+    Math.max(0, (Date.now() - s.saved) / 1000)
+  );
+  const gain = cps() * seconds;
+
+  earn(gain);
+
+  if (seconds > 60 && gain > 0) {
+    toast(
+      'Welcome back! Your fleet earned ' + fmt(gain) + ' Stardust.'
+    );
+  }
+
+  last = Date.now();
+  check();
+}
+
+try {
+  const raw = localStorage.getItem(KEY);
+
+  if (raw) {
+    s = valid(JSON.parse(raw));
+    offline();
+  }
+} catch {
+  toast('Could not load a valid save. You can import a backup.');
+}
+
+function baseCost(i) {
+  return buildings[i][2] * 1.15 ** s.counts[i];
+}
+
+function batch(i) {
+  const first = baseCost(i);
+  const room = 1500 - s.counts[i];
+
+  let n = qty === 'max'
+    ? Math.min(
+        room,
+        Math.max(
+          0,
+          Math.floor(
+            Math.log1p(s.dust * .15 / first) / Math.log(1.15)
+          )
+        )
+      )
+    : Math.min(room, Number(qty));
+
+  const cost = count => first * (1.15 ** count - 1) / .15;
+  let price = cost(n);
+
+  if (qty === 'max') {
+    while (n > 0 && price > s.dust) {
+      n--;
+      price = cost(n);
+    }
+
+    while (n < room && cost(n + 1) <= s.dust) {
+      n++;
+      price = cost(n);
+    }
+  }
+
+  return { n, cost: price };
+}
+
+function tapCost() {
+  return 50 * 5 ** s.tap;
+}
+
+function researchCost(i) {
+  return buildings[i][2] * 10 * 10 ** s.levels[i];
+}
+
+function coreGain() {
+  return Math.min(
+    1e9 - s.cores,
+    Math.floor(Math.sqrt(s.run / 1e6))
+  );
+}
+
+function render() {
+  $('dust').textContent = fmt(s.dust);
+  $('rate').textContent = fmt(cps());
+  $('clickPower').textContent = fmt(power());
+  $('sound').textContent = 'Sound: ' + (s.sound ? 'on' : 'off');
+  $('sound').setAttribute('aria-pressed', s.sound);
+
+  buildings.forEach((building, i) => {
+    const pack = batch(i);
+    const button = $('buy' + i);
+    const individualRate = building[3] * 2 ** s.levels[i] * mult();
+
+    $('owned' + i).textContent = s.counts[i];
+    $('prod' + i).textContent =
+      fmt(individualRate) + '/sec each · ' +
+      fmt(individualRate * s.counts[i]) + '/sec total';
+
+    button.disabled = pack.n === 0 || s.dust < pack.cost;
+
+    button.textContent = pack.n
+      ? 'Buy ' + pack.n + ' · ' + fmt(pack.cost)
+      : s.counts[i] >= 1500
+        ? 'Maxed'
+        : 'Need ' + fmt(baseCost(i));
+
+    button.title = pack.n
+      ? 'Spend ' + fmt(pack.cost) + ' Stardust on ' +
+        pack.n + ' ' + building[1]
+      : 'Next costs ' + fmt(baseCost(i));
+  });
+
+  $('tapUpgrade').disabled = s.dust < tapCost() || s.tap >= 50;
+  $('tapPrice').textContent = s.tap >= 50 ? 'Maxed' : fmt(tapCost());
+  $('tapLevel').textContent =
+    'Level ' + s.tap + ' · Double base Stardust per click';
+
+  buildings.forEach((building, i) => {
+    const button = $('up' + i);
+
+    button.disabled =
+      s.counts[i] < 1 ||
+      s.dust < researchCost(i) ||
+      s.levels[i] >= 30;
+
+    $('upPrice' + i).textContent =
+      s.levels[i] >= 30 ? 'Maxed' : fmt(researchCost(i));
+
+    $('upLevel' + i).textContent =
+      'Level ' + s.levels[i] + ' · ' +
+      (s.counts[i]
+        ? 'Double this generator’s production'
+        : 'Own one to unlock');
+  });
+
+  missions.forEach((mission, i) => {
+    const unlocked = s.ach.includes(i);
+    $('ach' + i).className = 'badge' + (unlocked ? ' unlocked' : '');
+    $('ach' + i).title =
+      unlocked ? 'Unlocked · +2% earnings' : mission[1];
+  });
+
+  $('achievementCount').textContent =
+    s.ach.length + '/' + missions.length;
+
+  $('lifetime').textContent =
+    'All-time: ' + fmt(s.total) + ' Stardust · ' +
+    fmt(s.clicks) + ' clicks';
+
+  $('coreInfo').textContent =
+    fmt(s.cores) + ' cores · +' +
+    fmt(s.cores * 10) + '% permanent bonus';
+
+  const gain = coreGain();
+  const next = 1e6 * (gain + 1) ** 2;
+
+  $('prestigeInfo').textContent =
+    'This run: ' + fmt(s.run) + ' earned. ' +
+    (s.cores >= 1e9
+      ? 'Core limit reached.'
+      : gain
+        ? 'Next core at ' + fmt(next) + ' earned.'
+        : 'First core at 1 M earned.');
+
+  $('progress').style.width =
+    Math.min(100, s.run / next * 100) + '%';
+
+  $('prestige').disabled = gain < 1;
+  $('prestige').textContent =
+    'Supernova · Gain ' + fmt(gain) + ' core' +
+    (gain === 1 ? '' : 's');
+}
+
+$('generators').innerHTML = buildings.map((building, i) => `
+  <div class="shop-item">
+    <div class="icon">${building[0]}</div>
+    <div class="details">
+      <b>${building[1]}</b>
+      <small id="prod${i}"></small>
+    </div>
+    <span class="owned" id="owned${i}" title="Owned">0</span>
+    <button id="buy${i}"></button>
+  </div>
+`).join('');
+
+$('upgrades').innerHTML = `
+  <button class="upgrade" id="tapUpgrade"
+    title="Double the Stardust earned by each click">
+    <span>
+      ✦ Stellar touch
+      <small id="tapLevel"></small>
+    </span>
+    <strong id="tapPrice"></strong>
+  </button>
+` + buildings.map((building, i) => `
+  <button class="upgrade" id="up${i}"
+    title="Double all ${building[1]} production">
+    <span>
+      ${building[0]} ${building[1]} research
+      <small id="upLevel${i}"></small>
+    </span>
+    <strong id="upPrice${i}"></strong>
+  </button>
+`).join('');
+
+$('achievements').innerHTML = missions.map((mission, i) => `
+  <div class="badge" id="ach${i}">
+    <b>✧ ${mission[0]}</b>
+    ${mission[1]}
+  </div>
+`).join('');
+
+$('star').addEventListener('click', event => {
+  advance();
+
+  const gain = power();
+  earn(gain);
+  s.clicks++;
+
+  const box = $('star').getBoundingClientRect();
+  const x = event.detail ? event.clientX : box.left + box.width / 2;
+  const y = event.detail ? event.clientY : box.top + box.height / 2;
+
+  for (let i = 0; i < 6; i++) {
+    const el = document.createElement('span');
+
+    el.className = 'float';
+    el.textContent = i ? '✦' : '+' + fmt(gain);
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    el.style.setProperty(
+      '--dx',
+      (i ? (Math.random() - .5) * 170 : 0) + 'px'
+    );
+
+    if (i) el.style.fontSize = '10px';
+
+    document.body.append(el);
+    setTimeout(() => el.remove(), 900);
+  }
+
+  sound();
+  check();
+  render();
+});
+
+for (let i = 0; i < buildings.length; i++) {
+  $('buy' + i).onclick = () => {
+    advance();
+    const pack = batch(i);
+
+    if (pack.n && s.dust >= pack.cost) {
+      s.dust = Math.max(0, s.dust - pack.cost);
+      s.counts[i] += pack.n;
+      sound(450);
+      check();
+    }
+
+    render();
+  };
+
+  $('up' + i).onclick = () => {
+    advance();
+    const cost = researchCost(i);
+
+    if (
+      s.counts[i] > 0 &&
+      s.levels[i] < 30 &&
+      s.dust >= cost
+    ) {
+      s.dust -= cost;
+      s.levels[i]++;
+      sound(750);
+    }
+
+    render();
+  };
+}
+
+$('tapUpgrade').onclick = () => {
+  advance();
+  const cost = tapCost();
+
+  if (s.tap < 50 && s.dust >= cost) {
+    s.dust -= cost;
+    s.tap++;
+    sound(750);
+  }
+
+  render();
+};
+
+document.querySelectorAll('[data-qty]').forEach(button => {
+  button.onclick = () => {
+    qty = button.dataset.qty;
+
+    document.querySelectorAll('[data-qty]').forEach(other => {
+      other.classList.toggle('selected', other === button);
+      other.setAttribute('aria-pressed', other === button);
+    });
+
+    render();
+  };
+});
+
+$('sound').onclick = () => {
+  s.sound = !s.sound;
+  sound();
+  save();
+  render();
+};
+
+$('save').onclick = () => {
+  advance();
+  save(true);
+  render();
+};
+
+$('prestige').onclick = () => {
+  advance();
+  const n = coreGain();
+
+  if (
+    !n ||
+    !confirm(
+      'Trigger Supernova for ' + fmt(n) + ' cores? ' +
+      'Your Stardust, industry, research, and run earnings reset. ' +
+      'Achievements and permanent cores stay.'
+    )
+  ) {
+    return;
+  }
+
+  const old = s;
+  s = fresh();
+
+  for (const key of ['total', 'clicks', 'caught', 'ach', 'sound']) {
+    s[key] = old[key];
+  }
+
+  s.cores = old.cores + n;
+  s.resets = old.resets + 1;
+  last = Date.now();
+
+  hideComet();
+  check();
+  save();
+  render();
+  toast('A new universe awakens. +' + fmt(n) + ' cores!');
+};
+
+function hideComet() {
+  $('comet').hidden = true;
+  cometUntil = 0;
+  nextComet = Date.now() + 45000 + Math.random() * 75000;
+}
+
+$('comet').onclick = () => {
+  if (!cometUntil || Date.now() > cometUntil) {
+    hideComet();
+    return;
+  }
+
+  advance();
+
+  const bonus = Math.max(50, cps() * 60, power() * 25);
+  earn(bonus);
+  s.caught++;
+
+  hideComet();
+  check();
+  render();
+  sound(1200);
+  toast('Shooting star! +' + fmt(bonus) + ' Stardust');
+};
+
+$('export').onclick = () => {
+  advance();
+  save();
+
+  const url = URL.createObjectURL(
+    new Blob([JSON.stringify(s)], { type: 'application/json' })
+  );
+  const link = document.createElement('a');
+
+  link.href = url;
+  link.download = 'stardust-save.json';
+  link.click();
+
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+};
+
+$('import').onclick = () => $('file').click();
+
+$('file').onchange = async event => {
+  const file = event.target.files[0];
+  event.target.value = '';
+
+  if (!file) return;
+
+  try {
+    if (file.size > 100000) throw Error('File too big');
+
+    const parsed = valid(JSON.parse(await file.text()));
+
+    if (!confirm('Replace your current progress with this save?')) {
+      return;
+    }
+
+    s = parsed;
+    offline();
+    hideComet();
+    save();
+    render();
+    toast('Save imported.');
+  } catch {
+    toast('That file is not a valid Stardust save.');
+  }
+};
+
+$('reset').onclick = () => {
+  if (
+    !confirm(
+      'Erase ALL progress, including cores and achievements? ' +
+      'Export first if you want a backup.'
+    )
+  ) {
+    return;
+  }
+
+  s = fresh();
+  last = Date.now();
+  hideComet();
+  save();
+  render();
+  toast('Your universe has been reset.');
+};
+
+setInterval(() => {
+  if (document.hidden) return;
+
+  advance();
+  const now = Date.now();
+
+  if (cometUntil && now > cometUntil) hideComet();
+
+  if (!cometUntil && now >= nextComet) {
+    $('comet').hidden = false;
+    $('comet').style.left = (10 + Math.random() * 50) + '%';
+    $('comet').style.top = (15 + Math.random() * 45) + '%';
+    cometUntil = now + 12000;
+    toast('A shooting star appeared!');
+  }
+
+  render();
+}, 200);
+
+setInterval(() => {
+  if (!document.hidden) {
+    advance();
+    save();
+  }
+}, 15000);
+
+document.addEventListener('visibilitychange', () => {
+  advance();
+
+  if (document.hidden) {
+    hideComet();
+    save();
+  } else {
+    save();
+    render();
+  }
+});
+
+window.addEventListener('pagehide', () => {
+  advance();
+  save();
+});
+
+check();
+render();
+save();
+</script>
 </body>
 </html>
