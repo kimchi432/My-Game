@@ -15,7 +15,6 @@
   --gold: #ffdd8b;
 }
 * { box-sizing: border-box; }
-
 body {
   margin: 0;
   background:
@@ -82,7 +81,6 @@ p { margin: 8px 0; }
 .muted, small { color: var(--muted); }
 .tools, .buybar { display: flex; gap: 8px; flex-wrap: wrap; }
 .tools button { font-size: 12px; }
-
 main {
   display: grid;
   grid-template-columns: 1.05fr 1fr;
@@ -107,7 +105,6 @@ main {
 }
 .stats { display: flex; justify-content: center; gap: 30px; }
 .stats b { display: block; color: var(--cyan); font-size: 20px; }
-
 .starfield {
   height: 300px;
   display: grid;
@@ -140,7 +137,6 @@ main {
   animation-direction: reverse;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
-
 #star {
   border: 0;
   background: none;
@@ -162,7 +158,6 @@ main {
 }
 #star:active { transform: scale(.9); }
 @keyframes pulse { 50% { transform: scale(1.06); } }
-
 .float {
   position: fixed;
   pointer-events: none;
@@ -312,16 +307,106 @@ footer {
   }
   .float { display: none; }
 }
+
+.fleet-token { position:absolute; pointer-events:none; z-index:2; font-size:23px; filter:drop-shadow(0 0 8px #89f3ff); }
+.fleet-token small { display:block; font-size:10px; background:#080b1ddd; border-radius:6px; }
+#purchasePops { position:absolute; right:0; top:8px; z-index:5; pointer-events:none; width:180px; }
+.purchase-pop { background:#142f42f2; border:1px solid var(--cyan); border-radius:12px; padding:8px; margin-bottom:5px; font-size:12px; animation:arrive .3s ease-out; }
+@keyframes arrive { from {opacity:0;transform:translateX(20px)} to {opacity:1;transform:translateX(0)} }
+#secret { border:0; padding:0; background:transparent; color:#8995b9; font-size:14px; width:32px; height:32px; }
+#arcadeOffer { width:100%; margin-top:12px; border-color:var(--gold); }
+[hidden] { display:none !important; }
+dialog { color:#f3f5ff; background:#141a32; border:1px solid #89f3ff; border-radius:20px; padding:25px; width:min(460px,calc(100% - 28px)); }
+dialog::backdrop { background:#030615bc; }
+#gameChoices { display:flex; flex-wrap:wrap; gap:10px; margin:20px 0; }
+#gameResult { min-height:48px; color:var(--gold); }
+@media(max-width:420px) { .shop-item {flex-wrap:wrap} .shop-item button {margin-left:auto} #purchasePops {width:145px} .fleet-token {font-size:19px} }
+
+#authScreen {max-width:460px; margin:8vh auto; padding:20px;}
+#authScreen h1 {margin:8px 0 20px;}
+.auth-tabs {display:flex;gap:8px;margin:22px 0;}
+.auth-tabs button {flex:1;}
+#authForm label {display:block;margin:14px 0 6px;}
+#authForm input:not([type=checkbox]) {width:100%;box-sizing:border-box;padding:12px;border-radius:10px;border:1px solid var(--line);background:#080b1d;color:white;font:inherit;}
+#authForm input:focus-visible {outline:2px solid var(--cyan);}
+#authSubmit {width:100%;margin-top:18px;background:#174052;border-color:var(--cyan);}
+#authMessage {min-height:24px;color:var(--gold);}
+#accountName {align-self:center;color:var(--cyan);font-size:12px;overflow-wrap:anywhere;}
+
+.chat-panel {grid-column:1 / -1;}
+.chat-layout {display:grid;grid-template-columns:200px minmax(0,1fr);gap:18px;margin-top:18px;}
+.chat-row {display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.chat-row input,.chat-compose textarea {background:#080b1d;color:#f3f5ff;border:1px solid var(--line);border-radius:10px;padding:11px;font:inherit;min-width:0;}
+.chat-row input {flex:1;}
+#chatContacts {display:flex;flex-direction:column;gap:8px;margin-top:10px;}
+#chatContacts button {text-align:left;overflow-wrap:anywhere;}
+#chatMessages {height:280px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:12px;background:#080b1d88;border:1px solid var(--line);border-radius:14px;}
+.chat-bubble {max-width:85%;align-self:flex-start;background:#27304d;border-radius:13px;padding:9px 12px;overflow-wrap:anywhere;}
+.chat-bubble.mine {align-self:flex-end;background:#174052;}
+.chat-bubble p {white-space:pre-wrap;margin:3px 0;}
+.chat-bubble small {font-size:10px;}
+.chat-compose {display:flex;align-items:flex-end;gap:8px;margin-top:12px;}
+.chat-compose textarea {resize:vertical;width:100%;min-height:72px;}
+#chatStatus {color:var(--gold);min-height:24px;}
+@media(max-width:600px) {.chat-layout {grid-template-columns:1fr;} #chatContacts {flex-direction:row;flex-wrap:wrap;} .chat-bubble {max-width:95%;}}
+
+.page-tabs {max-width:1240px;margin:0 auto 18px;padding:0 22px;display:flex;gap:10px;}
+.page-tabs button {padding:12px 22px;}
+#flightPage {max-width:1240px;margin:auto;padding:0 22px 22px;}
+.flight-stage {height:min(72vh,740px);min-height:430px;position:relative;overflow:hidden;border:1px solid #435878;border-radius:24px;background:radial-gradient(ellipse at 75% 30%,#3c2265 0,transparent 45%),radial-gradient(ellipse at 20% 70%,#06384b 0,transparent 50%),#030817;}
+#flightStage:fullscreen {width:100vw;height:100vh;border:0;border-radius:0;}
+#flightCanvas {width:100%;height:100%;display:block;touch-action:none;outline-offset:-4px;}
+.flight-hud {position:absolute;inset:20px 20px auto;display:flex;justify-content:space-between;gap:10px;pointer-events:none;text-shadow:0 2px 8px #000;}
+.flight-hud strong {display:block;font-size:clamp(20px,3vw,34px);color:var(--gold);}
+.flight-hud small {font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#c2d4ed;}
+.flight-hud .flight-right {text-align:right;}
+#flightOverlay {position:absolute;inset:0;display:grid;place-items:center;background:#05091777;padding:22px;}
+.flight-card {width:min(460px,100%);text-align:center;padding:26px;border:1px solid #82bdc066;background:#0e1838ed;border-radius:20px;box-shadow:0 20px 80px #0008;}
+.flight-card h2 {font-size:30px;letter-spacing:2px;margin:10px 0;}
+#flightStart {margin-top:15px;background:#174b5e;border-color:var(--cyan);min-width:180px;}
+.flight-toolbar {display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0;}
+.flight-toolbar p {flex:1;min-width:200px;}
+#flightFeedback {position:absolute;bottom:28px;left:0;right:0;text-align:center;color:var(--gold);font-size:23px;font-weight:800;pointer-events:none;text-shadow:0 0 18px #000;}
+.flight-vignette {position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 100px #0008;border-radius:24px;}
+.flight-crosshair {position:absolute;left:50%;top:50%;width:16px;height:16px;border:1px solid #a8efff55;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;}
+@media(max-width:600px) {#flightPage {padding:0 12px 12px}.page-tabs {padding:0 14px}.flight-stage {min-height:440px;height:68vh}.flight-hud {inset:14px}.flight-card {padding:18px}}
+
+.flight-shop {margin-top:18px;}
+.flight-shop-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px;}
+.flight-upgrade-card {padding:16px;border:1px solid var(--line);border-radius:15px;background:#0b112a66;}
+.flight-upgrade-card h3 {margin:0 0 8px;font-size:17px;}
+.flight-upgrade-card button {width:100%;margin-top:12px;}
+.flight-upgrade-card p {min-height:45px;}
+#flightShopStatus {min-height:22px;color:var(--gold);}
+@media(max-width:700px) {.flight-shop-grid {grid-template-columns:1fr}.flight-upgrade-card p {min-height:0}}
 </style>
 </head>
 <body>
-
+<section id="authScreen">
+<div class="panel">
+<div class="eyebrow">Your own corner of the cosmos</div><h1>✦ STARDUST</h1>
+<p>Log in to continue your universe, or create an account to start exploring.</p>
+<div class="auth-tabs"><button id="loginTab" class="selected" type="button" aria-pressed="true">Log in</button><button id="signupTab" type="button" aria-pressed="false">Create account</button></div>
+<form id="authForm">
+<label for="username">Username</label><input id="username" autocomplete="username" required minlength="3" maxlength="24" pattern="[A-Za-z0-9_]{3,24}" placeholder="Your space explorer name" aria-describedby="usernameHelp">
+<small id="usernameHelp">3–24 letters, numbers, or underscores. Names ignore capitalization.</small>
+<label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required minlength="8" maxlength="128" placeholder="At least 8 characters">
+<div id="signupFields" hidden><label for="confirmPassword">Confirm password</label><input id="confirmPassword" type="password" autocomplete="new-password" maxlength="128">
+<label id="legacyOption" hidden><input id="useLegacy" type="checkbox"> Bring my previous game progress into this account</label></div>
+<button id="authSubmit" type="submit">Log in</button><p id="authMessage" role="status" aria-live="polite"></p>
+</form>
+<button id="playGuest" type="button" style="width:100%;margin:4px 0 10px">🚀 Play as Guest</button>
+<p class="muted" style="font-size:12px">No signup needed. Guest progress has its own shared save in this browser. Chat requires an account.</p>
+<small>Local accounts only: stored in this browser, with no device syncing or password recovery. Use a game-only password. Clearing browser data removes accounts and saves; export your progress as a backup. This login does not protect data from someone with access to this browser.</small>
+</div></section>
+<div id="gameShell" hidden inert>
 <header>
   <div>
     <div class="eyebrow">An idle expedition</div>
-    <h1>✦ STARDUST</h1>
+    <h1><button id="secret" aria-label="Tiny star">✦</button> STARDUST</h1>
   </div>
   <div class="tools">
+<span id="accountName"></span><button id="logout">Log out</button>
     <button id="sound" aria-pressed="false">Sound: off</button>
     <button id="save">Save</button>
     <button id="export">Export</button>
@@ -329,18 +414,34 @@ footer {
     <button id="reset">Reset</button>
   </div>
 </header>
-
-<main>
+<nav class="page-tabs" aria-label="Game pages"><button id="clickerTab" class="selected" aria-pressed="true">✦ Star Clicker</button><button id="flightTab" aria-pressed="false">🚀 Rocket Flight</button></nav>
+<section id="flightPage" hidden aria-labelledby="flightPageTitle">
+<div class="eyebrow">Beyond the orbital frontier</div><h2 id="flightPageTitle">Stardust Run</h2>
+<div class="flight-stage" id="flightStage">
+<canvas id="flightCanvas" tabindex="0" aria-label="3D rocket flight. Steer with WASD or arrow keys, or drag on the scene. Collect gold crystals and avoid asteroids. Press P to pause."></canvas>
+<div class="flight-vignette"></div><div class="flight-crosshair"></div>
+<div class="flight-hud"><div><small>Banked this flight</small><strong id="flightBank">0 ✦</strong><small id="flightReward">Collect gold crystals</small></div><div class="flight-right"><small>Hull · Time left</small><strong id="flightHull">♥ ♥ ♥</strong><span id="flightTimer">60s</span></div></div>
+<div id="flightFeedback" role="status" aria-live="polite"></div>
+<div id="flightOverlay"><div class="flight-card"><div class="eyebrow">A 60-second expedition</div><h2 id="flightTitle">STAR DIVER</h2><p id="flightDescription">Pilot your rocket through an asteroid field. Collect glowing gold crystals to earn Stardust for your account.</p><p class="muted">WASD / arrow keys to steer · drag to steer on touchscreens · P to pause</p><button id="flightStart">Launch rocket</button></div></div>
+</div>
+<div class="flight-toolbar"><p class="muted">Gold crystals bank immediately. Dodge the rocks; running out of hull ends your flight. Earned Stardust stays yours.</p><button id="flightPause" disabled>Pause</button><button id="flightFullscreen">Full screen</button></div>
+<section class="panel flight-shop" aria-labelledby="flightShopTitle">
+<div class="eyebrow">Spend Stardust · improve your rocket</div><h2 id="flightShopTitle">Rocket hangar</h2>
+<p>Available: <strong id="flightShopBalance">0</strong> Stardust</p>
+<small>Upgrades apply when you launch a new flight. Saved with your account or guest progress. Supernova resets flight upgrades.</small>
+<div class="flight-shop-grid" id="flightShop"></div><p id="flightShopStatus" role="status" aria-live="polite"></p>
+</section>
+</section>
+<main id="clickerPage">
   <div class="left">
     <section class="panel hero">
       <div class="eyebrow">Your cosmic treasury</div>
       <div class="balance" id="dust">0</div>
       <div class="muted">Stardust</div>
-
       <div class="starfield">
+<div id="fleet"></div><div id="purchasePops" role="status" aria-live="polite"></div>
         <div class="orbit"></div>
         <div class="orbit second"></div>
-
         <button id="star" aria-label="Click star to collect Stardust">
           <svg viewBox="0 0 200 200" aria-hidden="true">
             <defs>
@@ -359,16 +460,15 @@ footer {
           </svg>
         </button>
       </div>
-
       <div class="stats">
         <div><b id="clickPower">1</b><small>per click</small></div>
         <div><b id="rate">0</b><small>per second</small></div>
       </div>
-
       <p class="muted">A little spark. An entire universe.</p>
+<button id="arcadeOffer" hidden>🎲 A cosmic arcade has appeared — play or skip</button>
+<small>Arcade encounters arrive occasionally. Only playing risks Stardust.</small>
       <div id="status" role="status">Progress saves automatically.</div>
     </section>
-
     <section class="panel prestige">
       <div class="eyebrow">Begin again, burn brighter</div>
       <h2>Supernova</h2>
@@ -382,7 +482,6 @@ footer {
       <small id="prestigeInfo"></small>
       <button id="prestige">Trigger Supernova</button>
     </section>
-
     <section class="panel">
       <h2>Mission log <small id="achievementCount"></small></h2>
       <small>
@@ -392,52 +491,70 @@ footer {
       <p class="muted" id="lifetime"></p>
     </section>
   </div>
-
   <section class="panel">
     <div class="eyebrow">Build your constellation</div>
     <h2>Orbital industry</h2>
-
     <div class="buybar">
       <span>Purchase quantity</span>
       <button class="selected" data-qty="1" aria-pressed="true">1</button>
       <button data-qty="10" aria-pressed="false">10</button>
       <button data-qty="max" aria-pressed="false">Max</button>
     </div>
-
     <div id="generators"></div>
-
     <div class="section">
       <h2>Research lab</h2>
       <small>
         Click research doubles your base click power.
         Industry research doubles that generator's output.
       </small>
-      <div id="upgrades"></div>
+      <div id="upgrades"></div><div id="extraUpgrades"></div>
     </div>
   </section>
+<section class="panel chat-panel" aria-labelledby="chatHeading">
+<div class="eyebrow">Local comms</div><h2 id="chatHeading">Explorer chat <small id="chatUnread"></small></h2>
+<p class="muted">Message another account in this browser. They can read and reply after logging in. Messages stay on this browser and are not private from its owner.</p>
+<form id="chatFind" class="chat-row"><label for="chatUsername">Username</label><input id="chatUsername" placeholder="Enter their username" required minlength="3" maxlength="24" pattern="[A-Za-z0-9_]{3,24}" autocomplete="off"><button id="chatOpenButton" type="submit">Open chat</button></form>
+<p id="chatStatus" role="status" aria-live="polite"></p>
+<div class="chat-layout"><aside><b>Conversations</b><div id="chatContacts"></div></aside>
+<div><h3 id="chatWith">Choose an explorer</h3><div id="chatMessages" role="log" aria-label="Conversation" aria-live="polite"></div>
+<form id="chatSend" class="chat-compose"><label for="chatText" class="muted">Message</label><textarea id="chatText" placeholder="Type a message…" maxlength="1000" required disabled></textarea><button id="chatSendButton" type="submit" disabled>Send</button></form>
+<small>Up to 1,000 characters per message. Showing the latest 200 messages in each conversation. Game exports do not include chat.</small></div></div>
+</section>
 </main>
-
 <footer>
   Offline production: 100% for up to 8 hours.
   Shooting stars appear while you play.
   Export a backup before changing browsers.
 </footer>
-
 <button id="comet" hidden
   title="Catch this shooting star for a Stardust bonus!">
   ☄ Catch me!
 </button>
-
 <div id="toasts" role="status" aria-live="polite"></div>
 <input id="file" type="file" accept="application/json,.json" hidden>
-
+<dialog id="arcade" aria-labelledby="gameTitle">
+<div class="eyebrow">Cosmic arcade · fictional Stardust only</div>
+<h2 id="gameTitle"></h2><p id="gameRules"></p><p id="gameStake"></p>
+<div id="gameChoices"></div><p id="gameResult" role="status"></p>
+<button id="closeGame">Skip — no cost</button>
+</dialog>
+</div>
 <script>
 'use strict';
-
 const KEY = 'stardust-clicker-v1';
+const ACCOUNT_PREFIX = 'stardust-account-v1:';
+const SAVE_PREFIX = 'stardust-account-save-v1:';
+let activeUser = null;
+let authMode = 'login';
+let authBusy = false;
+let sessionEpoch = 0;
+const MESSAGE_PREFIX = 'stardust-message-v1:';
+const READ_PREFIX = 'stardust-message-read-v1:';
+let chatPeer = null;
+let chatSignature = '';
+let currentPage = 'clicker';
 const CAP = 1e100;
 const $ = id => document.getElementById(id);
-
 const buildings = [
   ['🛰', 'Satellite',       15,        0.1],
   ['🌙', 'Lunar mine',      100,       1],
@@ -448,7 +565,6 @@ const buildings = [
   ['🌌', 'Galaxy',          20000000,  7800],
   ['✦', 'Universe engine', 330000000, 44000]
 ];
-
 const fresh = () => ({
   version: 1,
   dust: 0,
@@ -461,11 +577,12 @@ const fresh = () => ({
   counts: buildings.map(() => 0),
   levels: buildings.map(() => 0),
   tap: 0,
+  extras: [0, 0, 0],
+  flightUpgrades: [0, 0, 0],
   ach: [],
   sound: false,
   saved: Date.now()
 });
-
 let s = fresh();
 let qty = '1';
 let audio;
@@ -473,7 +590,6 @@ let storageWarned = false;
 let last = Date.now();
 let nextComet = last + 45000 + Math.random() * 45000;
 let cometUntil = 0;
-
 const missions = [
   ['First light', 'Click your star once.', () => s.clicks >= 1],
   ['Stargazer', 'Click 100 times.', () => s.clicks >= 100],
@@ -490,26 +606,21 @@ const missions = [
   ['Comet catcher', 'Catch a shooting star.', () => s.caught >= 1],
   ['Reborn', 'Trigger a Supernova.', () => s.resets >= 1]
 ];
-
 function fmt(n) {
   if (n < 1000) {
     return n.toLocaleString('en-US', {
       maximumFractionDigits: n < 10 ? 1 : 0
     });
   }
-
   const i = Math.floor(Math.log10(n) / 3);
   const units = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No'];
-
   return i < units.length
     ? (n / 1000 ** i).toFixed(2) + ' ' + units[i]
     : n.toExponential(2);
 }
-
 function mult() {
-  return (1 + s.cores * .1) * (1 + s.ach.length * .02);
+  return (1 + s.cores * .1) * (1 + s.ach.length * .02) * 1.25 ** s.extras[0];
 }
-
 function cps() {
   return buildings.reduce(
     (value, building, i) =>
@@ -517,18 +628,15 @@ function cps() {
     0
   ) * mult();
 }
-
 function power() {
-  return 2 ** s.tap * mult();
+  return 2 ** s.tap * mult() + cps() * .01 * s.extras[1];
 }
-
 function earn(n) {
   n = Math.max(0, Math.min(CAP, n));
   s.dust = Math.min(CAP, s.dust + n);
   s.run = Math.min(CAP, s.run + n);
   s.total = Math.min(CAP, s.total + n);
 }
-
 function toast(message) {
   const el = document.createElement('div');
   el.className = 'toast';
@@ -536,34 +644,26 @@ function toast(message) {
   $('toasts').append(el);
   setTimeout(() => el.remove(), 4500);
 }
-
 function sound(f = 600) {
   if (!s.sound) return;
-
   try {
     audio ??= new (
       window.AudioContext || window.webkitAudioContext
     )();
-
     if (audio.state === 'suspended') audio.resume();
-
     const now = audio.currentTime;
-
     // Three overlapping notes create a futuristic sparkle.
     const notes = [
       { ratio: 1, delay: 0, volume: 0.045 },
       { ratio: 1.5, delay: 0.035, volume: 0.025 },
       { ratio: 2, delay: 0.07, volume: 0.015 }
     ];
-
     notes.forEach(note => {
       const oscillator = audio.createOscillator();
       const envelope = audio.createGain();
       const start = now + note.delay;
       const pitch = f * note.ratio;
-
       oscillator.type = 'sine';
-
       // A quick upward sweep, then a gentle pitch drop.
       oscillator.frequency.setValueAtTime(pitch * 0.7, start);
       oscillator.frequency.exponentialRampToValueAtTime(
@@ -574,7 +674,6 @@ function sound(f = 600) {
         pitch * 0.9,
         start + 0.25
       );
-
       // Fade in quickly and ring out smoothly.
       envelope.gain.setValueAtTime(0, start);
       envelope.gain.linearRampToValueAtTime(
@@ -585,13 +684,10 @@ function sound(f = 600) {
         0.001,
         start + 0.28
       );
-
       oscillator.connect(envelope);
       envelope.connect(audio.destination);
-
       oscillator.start(start);
       oscillator.stop(start + 0.3);
-
       oscillator.onended = () => {
         oscillator.disconnect();
         envelope.disconnect();
@@ -599,7 +695,6 @@ function sound(f = 600) {
     });
   } catch {}
 }
-
 function check() {
   missions.forEach((mission, i) => {
     if (!s.ach.includes(i) && mission[2]()) {
@@ -609,42 +704,37 @@ function check() {
     }
   });
 }
-
 function advance() {
+  if (!activeUser) return;
   const now = Date.now();
   const elapsed = Math.min(28800, Math.max(0, (now - last) / 1000));
-
   earn(cps() * elapsed);
   last = now;
   check();
 }
-
 function save(announce = false) {
+  if (!activeUser) return false;
   s.saved = Date.now();
-
   try {
-    localStorage.setItem(KEY, JSON.stringify(s));
+    localStorage.setItem(SAVE_PREFIX + activeUser.id, JSON.stringify(s));
     $('status').textContent =
       'Saved ' + new Date(s.saved).toLocaleTimeString();
-
     if (announce) toast('Progress saved.');
+    return true;
   } catch {
     if (!storageWarned) {
       toast('Browser saving is unavailable. Use Export to keep your progress.');
       storageWarned = true;
     }
-
     $('status').textContent = 'Auto-save unavailable. Export your progress.';
+    return false;
   }
 }
-
 function valid(data) {
   if (!data || data.version !== 1) {
     throw Error('Unsupported save');
   }
-
   const out = fresh();
-
   for (const key of [
     'dust', 'run', 'total', 'clicks', 'caught',
     'cores', 'resets', 'tap', 'saved'
@@ -657,20 +747,16 @@ function valid(data) {
     ) {
       throw Error('Invalid save');
     }
-
     out[key] = data[key];
   }
-
   for (const key of ['clicks', 'caught', 'cores', 'resets', 'tap']) {
     if (!Number.isSafeInteger(out[key])) {
       throw Error('Invalid counter');
     }
   }
-
   if (out.tap > 50 || out.cores > 1e9) {
     throw Error('Invalid level');
   }
-
   for (const key of ['counts', 'levels']) {
     if (
       !Array.isArray(data[key]) ||
@@ -683,10 +769,8 @@ function valid(data) {
     ) {
       throw Error('Invalid industry');
     }
-
     out[key] = data[key].slice();
   }
-
   if (
     !Array.isArray(data.ach) ||
     data.ach.some(n =>
@@ -695,50 +779,130 @@ function valid(data) {
   ) {
     throw Error('Invalid achievements');
   }
-
   out.ach = [...new Set(data.ach)];
+  if (data.extras !== undefined) {
+    if (!Array.isArray(data.extras) || data.extras.length !== 3 || data.extras.some(n => !Number.isInteger(n) || n < 0 || n > 20)) throw Error('Invalid upgrades');
+    out.extras = data.extras.slice();
+  }
+  if (data.flightUpgrades !== undefined) {
+    if (!Array.isArray(data.flightUpgrades) || data.flightUpgrades.length !== 3 || data.flightUpgrades.some((n,i) => !Number.isInteger(n) || n < 0 || n > [5,5,8][i])) throw Error('Invalid flight upgrades');
+    out.flightUpgrades = data.flightUpgrades.slice();
+  }
   out.sound = data.sound === true;
   return out;
 }
-
 function offline() {
   const seconds = Math.min(
     28800,
     Math.max(0, (Date.now() - s.saved) / 1000)
   );
   const gain = cps() * seconds;
-
   earn(gain);
-
   if (seconds > 60 && gain > 0) {
     toast(
       'Welcome back! Your fleet earned ' + fmt(gain) + ' Stardust.'
     );
   }
-
   last = Date.now();
   check();
 }
-
-try {
-  const raw = localStorage.getItem(KEY);
-
-  if (raw) {
-    s = valid(JSON.parse(raw));
-    offline();
-  }
-} catch {
-  toast('Could not load a valid save. You can import a backup.');
+const extraDefs = [
+  ['⚡', 'Cosmic amplifier', 'Multiply clicks and industry by 1.25 per level', 500],
+  ['🔗', 'Stellar link', 'Add 1% of your production per second to each click per level', 2500],
+  ['☄', 'Comet magnet', 'Multiply shooting-star rewards by 1.5 per level', 5000]
+];
+let nextArcade = Date.now() + 45000;
+let offerUntil = 0;
+let game = null;
+let fleetSignature = '';
+function extraCost(i) { return extraDefs[i][3] * 4 ** s.extras[i]; }
+function purchasePop(icon, message) {
+  const el = document.createElement('div');
+  el.className = 'purchase-pop'; el.textContent = icon + ' ' + message;
+  $('purchasePops').prepend(el);
+  while ($('purchasePops').children.length > 4) $('purchasePops').lastChild.remove();
+  setTimeout(() => el.remove(), 3200);
 }
-
+function renderFleet() {
+  const signature = s.counts.join(',');
+  if (signature === fleetSignature) return;
+  fleetSignature = signature;
+  $('fleet').innerHTML = buildings.map((b,i) => {
+    if (!s.counts[i]) return '';
+    const a = i * Math.PI / 4 - Math.PI / 2;
+    return `<span class="fleet-token" style="left:calc(50% + ${Math.cos(a)*126}px - 18px);top:calc(50% + ${Math.sin(a)*116}px - 22px)" title="${b[1]}">${b[0]}<small>×${s.counts[i]}</small></span>`;
+  }).join('');
+}
+function renderExtras() {
+  extraDefs.forEach((d,i) => {
+    const b = $('extra'+i); if (!b) return;
+    b.disabled = s.extras[i] >= 20 || s.dust < extraCost(i);
+    $('extraLevel'+i).textContent = 'Level '+s.extras[i]+' · '+d[2];
+    $('extraPrice'+i).textContent = s.extras[i] >= 20 ? 'Maxed' : fmt(extraCost(i));
+  });
+}
+function cancelArcade() {
+  game = null; offerUntil = 0; $('arcadeOffer').hidden = true;
+  if ($('arcade').open) $('arcade').close();
+  nextArcade = Date.now() + 60000 + Math.random()*60000;
+}
+function openArcade() {
+  if (!offerUntil || Date.now() > offerUntil || game) return;
+  advance();
+  const type = Math.floor(Math.random()*3);
+  const stake = Math.min(Math.floor(s.dust), Math.max(10, Math.floor(s.dust*.05)));
+  if (stake < 1) { cancelArcade(); return; }
+  game = {type, stake, settled:false};
+  $('arcadeOffer').hidden = true; offerUntil = 0;
+  $('gameTitle').textContent = ['🪙 Coin flip','🎲 High or low','🪨 Rock, paper, scissors'][type];
+  $('gameRules').textContent = [
+    'Pick heads or tails. A fair coin decides the winner.',
+    'Guess the roll of a six-sided die: low (1–3) or high (4–6).',
+    'Choose a move. Rock beats scissors, scissors beat paper, paper beats rock. A tie returns your stake.'
+  ][type];
+  $('gameStake').textContent = 'Stake: '+fmt(stake)+' Stardust. Win: net +'+fmt(stake)+'. Lose: −'+fmt(stake)+'.';
+  $('gameResult').textContent = 'Choose to play, or skip for free.';
+  $('closeGame').textContent = 'Skip — no cost';
+  const choices = [['Heads','Tails'],['Low (1–3)','High (4–6)'],['Rock','Paper','Scissors']][type];
+  $('gameChoices').replaceChildren();
+  choices.forEach((label,i) => {
+    const b = document.createElement('button'); b.textContent = label;
+    b.onclick = () => settleGame(i); $('gameChoices').append(b);
+  });
+  $('arcade').showModal();
+}
+function settleGame(choice) {
+  if (!game || game.settled) return;
+  advance();
+  const {type,stake} = game;
+  if (s.dust < stake) { $('gameResult').textContent = 'Not enough Stardust. Close and try a later encounter.'; return; }
+  game.settled = true;
+  s.dust -= stake;
+  let result, detail;
+  if (type === 0) {
+    const flip = Math.floor(Math.random()*2); result = choice === flip ? 1 : -1;
+    detail = 'The coin landed on '+['heads','tails'][flip]+'.';
+  } else if (type === 1) {
+    const die = 1+Math.floor(Math.random()*6); result = choice === (die <= 3 ? 0 : 1) ? 1 : -1;
+    detail = 'You rolled '+die+'.';
+  } else {
+    const opponent = Math.floor(Math.random()*3);
+    result = choice === opponent ? 0 : (choice-opponent+3)%3 === 1 ? 1 : -1;
+    detail = 'The rival chose '+['rock','paper','scissors'][opponent]+'.';
+  }
+  if (result >= 0) s.dust = Math.min(CAP, s.dust + stake); // Return original stake without counting it as new earnings.
+  if (result === 1) earn(stake);
+  $('gameChoices').querySelectorAll('button').forEach(b => b.disabled = true);
+  $('gameResult').textContent = detail + (result === 1 ? ' You won! +'+fmt(stake) : result === -1 ? ' You lost '+fmt(stake)+'.' : ' Tie! Stake returned.');
+  $('closeGame').textContent = 'Back to the stars';
+  sound(result === 1 ? 1000 : 250); check(); render(); save();
+}
 function baseCost(i) {
   return buildings[i][2] * 1.15 ** s.counts[i];
 }
-
 function batch(i) {
   const first = baseCost(i);
   const room = 1500 - s.counts[i];
-
   let n = qty === 'max'
     ? Math.min(
         room,
@@ -750,115 +914,94 @@ function batch(i) {
         )
       )
     : Math.min(room, Number(qty));
-
   const cost = count => first * (1.15 ** count - 1) / .15;
   let price = cost(n);
-
   if (qty === 'max') {
     while (n > 0 && price > s.dust) {
       n--;
       price = cost(n);
     }
-
     while (n < room && cost(n + 1) <= s.dust) {
       n++;
       price = cost(n);
     }
   }
-
   return { n, cost: price };
 }
-
 function tapCost() {
   return 50 * 5 ** s.tap;
 }
-
 function researchCost(i) {
   return buildings[i][2] * 10 * 10 ** s.levels[i];
 }
-
 function coreGain() {
   return Math.min(
     1e9 - s.cores,
     Math.floor(Math.sqrt(s.run / 1e6))
   );
 }
-
 function render() {
+  renderFlightShop();
+  renderExtras();
+  renderFleet();
   $('dust').textContent = fmt(s.dust);
   $('rate').textContent = fmt(cps());
   $('clickPower').textContent = fmt(power());
   $('sound').textContent = 'Sound: ' + (s.sound ? 'on' : 'off');
   $('sound').setAttribute('aria-pressed', s.sound);
-
   buildings.forEach((building, i) => {
     const pack = batch(i);
     const button = $('buy' + i);
     const individualRate = building[3] * 2 ** s.levels[i] * mult();
-
     $('owned' + i).textContent = s.counts[i];
     $('prod' + i).textContent =
       fmt(individualRate) + '/sec each · ' +
       fmt(individualRate * s.counts[i]) + '/sec total';
-
     button.disabled = pack.n === 0 || s.dust < pack.cost;
-
     button.textContent = pack.n
       ? 'Buy ' + pack.n + ' · ' + fmt(pack.cost)
       : s.counts[i] >= 1500
         ? 'Maxed'
         : 'Need ' + fmt(baseCost(i));
-
     button.title = pack.n
       ? 'Spend ' + fmt(pack.cost) + ' Stardust on ' +
         pack.n + ' ' + building[1]
       : 'Next costs ' + fmt(baseCost(i));
   });
-
   $('tapUpgrade').disabled = s.dust < tapCost() || s.tap >= 50;
   $('tapPrice').textContent = s.tap >= 50 ? 'Maxed' : fmt(tapCost());
   $('tapLevel').textContent =
     'Level ' + s.tap + ' · Double base Stardust per click';
-
   buildings.forEach((building, i) => {
     const button = $('up' + i);
-
     button.disabled =
       s.counts[i] < 1 ||
       s.dust < researchCost(i) ||
       s.levels[i] >= 30;
-
     $('upPrice' + i).textContent =
       s.levels[i] >= 30 ? 'Maxed' : fmt(researchCost(i));
-
     $('upLevel' + i).textContent =
       'Level ' + s.levels[i] + ' · ' +
       (s.counts[i]
         ? 'Double this generator’s production'
         : 'Own one to unlock');
   });
-
   missions.forEach((mission, i) => {
     const unlocked = s.ach.includes(i);
     $('ach' + i).className = 'badge' + (unlocked ? ' unlocked' : '');
     $('ach' + i).title =
       unlocked ? 'Unlocked · +2% earnings' : mission[1];
   });
-
   $('achievementCount').textContent =
     s.ach.length + '/' + missions.length;
-
   $('lifetime').textContent =
     'All-time: ' + fmt(s.total) + ' Stardust · ' +
     fmt(s.clicks) + ' clicks';
-
   $('coreInfo').textContent =
     fmt(s.cores) + ' cores · +' +
     fmt(s.cores * 10) + '% permanent bonus';
-
   const gain = coreGain();
   const next = 1e6 * (gain + 1) ** 2;
-
   $('prestigeInfo').textContent =
     'This run: ' + fmt(s.run) + ' earned. ' +
     (s.cores >= 1e9
@@ -866,16 +1009,13 @@ function render() {
       : gain
         ? 'Next core at ' + fmt(next) + ' earned.'
         : 'First core at 1 M earned.');
-
   $('progress').style.width =
     Math.min(100, s.run / next * 100) + '%';
-
   $('prestige').disabled = gain < 1;
   $('prestige').textContent =
     'Supernova · Gain ' + fmt(gain) + ' core' +
     (gain === 1 ? '' : 's');
 }
-
 $('generators').innerHTML = buildings.map((building, i) => `
   <div class="shop-item">
     <div class="icon">${building[0]}</div>
@@ -887,7 +1027,6 @@ $('generators').innerHTML = buildings.map((building, i) => `
     <button id="buy${i}"></button>
   </div>
 `).join('');
-
 $('upgrades').innerHTML = `
   <button class="upgrade" id="tapUpgrade"
     title="Double the Stardust earned by each click">
@@ -907,28 +1046,22 @@ $('upgrades').innerHTML = `
     <strong id="upPrice${i}"></strong>
   </button>
 `).join('');
-
 $('achievements').innerHTML = missions.map((mission, i) => `
   <div class="badge" id="ach${i}">
     <b>✧ ${mission[0]}</b>
     ${mission[1]}
   </div>
 `).join('');
-
 $('star').addEventListener('click', event => {
   advance();
-
   const gain = power();
   earn(gain);
   s.clicks++;
-
   const box = $('star').getBoundingClientRect();
   const x = event.detail ? event.clientX : box.left + box.width / 2;
   const y = event.detail ? event.clientY : box.top + box.height / 2;
-
   for (let i = 0; i < 6; i++) {
     const el = document.createElement('span');
-
     el.className = 'float';
     el.textContent = i ? '✦' : '+' + fmt(gain);
     el.style.left = x + 'px';
@@ -937,37 +1070,30 @@ $('star').addEventListener('click', event => {
       '--dx',
       (i ? (Math.random() - .5) * 170 : 0) + 'px'
     );
-
     if (i) el.style.fontSize = '10px';
-
     document.body.append(el);
     setTimeout(() => el.remove(), 900);
   }
-
   sound();
   check();
   render();
 });
-
 for (let i = 0; i < buildings.length; i++) {
   $('buy' + i).onclick = () => {
     advance();
     const pack = batch(i);
-
     if (pack.n && s.dust >= pack.cost) {
       s.dust = Math.max(0, s.dust - pack.cost);
       s.counts[i] += pack.n;
+      purchasePop(buildings[i][0], buildings[i][1] + " ×" + pack.n);
       sound(450);
       check();
     }
-
     render();
   };
-
   $('up' + i).onclick = () => {
     advance();
     const cost = researchCost(i);
-
     if (
       s.counts[i] > 0 &&
       s.levels[i] < 30 &&
@@ -975,56 +1101,47 @@ for (let i = 0; i < buildings.length; i++) {
     ) {
       s.dust -= cost;
       s.levels[i]++;
+      purchasePop("🔬", buildings[i][1] + " research · Lv " + s.levels[i]);
       sound(750);
     }
-
     render();
   };
 }
-
 $('tapUpgrade').onclick = () => {
   advance();
   const cost = tapCost();
-
   if (s.tap < 50 && s.dust >= cost) {
     s.dust -= cost;
     s.tap++;
+    purchasePop("✦", "Stellar touch · Lv " + s.tap);
     sound(750);
   }
-
   render();
 };
-
 document.querySelectorAll('[data-qty]').forEach(button => {
   button.onclick = () => {
     qty = button.dataset.qty;
-
     document.querySelectorAll('[data-qty]').forEach(other => {
       other.classList.toggle('selected', other === button);
       other.setAttribute('aria-pressed', other === button);
     });
-
     render();
   };
 });
-
 $('sound').onclick = () => {
   s.sound = !s.sound;
   sound();
   save();
   render();
 };
-
 $('save').onclick = () => {
   advance();
   save(true);
   render();
 };
-
 $('prestige').onclick = () => {
   advance();
   const n = coreGain();
-
   if (
     !n ||
     !confirm(
@@ -1035,83 +1152,69 @@ $('prestige').onclick = () => {
   ) {
     return;
   }
-
+  resetFlight();
   const old = s;
   s = fresh();
-
   for (const key of ['total', 'clicks', 'caught', 'ach', 'sound']) {
     s[key] = old[key];
   }
-
   s.cores = old.cores + n;
   s.resets = old.resets + 1;
   last = Date.now();
-
   hideComet();
+  cancelArcade();
   check();
   save();
   render();
   toast('A new universe awakens. +' + fmt(n) + ' cores!');
 };
-
 function hideComet() {
   $('comet').hidden = true;
   cometUntil = 0;
   nextComet = Date.now() + 45000 + Math.random() * 75000;
 }
-
 $('comet').onclick = () => {
   if (!cometUntil || Date.now() > cometUntil) {
     hideComet();
     return;
   }
-
   advance();
-
-  const bonus = Math.max(50, cps() * 60, power() * 25);
+  const bonus = Math.max(50, cps() * 60, power() * 25) * 1.5 ** s.extras[2];
   earn(bonus);
   s.caught++;
-
   hideComet();
   check();
   render();
   sound(1200);
   toast('Shooting star! +' + fmt(bonus) + ' Stardust');
 };
-
 $('export').onclick = () => {
   advance();
   save();
-
   const url = URL.createObjectURL(
     new Blob([JSON.stringify(s)], { type: 'application/json' })
   );
   const link = document.createElement('a');
-
   link.href = url;
   link.download = 'stardust-save.json';
   link.click();
-
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 };
-
 $('import').onclick = () => $('file').click();
-
 $('file').onchange = async event => {
+  const ownerEpoch = sessionEpoch;
   const file = event.target.files[0];
   event.target.value = '';
-
   if (!file) return;
-
   try {
     if (file.size > 100000) throw Error('File too big');
-
     const parsed = valid(JSON.parse(await file.text()));
-
+    if (!activeUser || sessionEpoch !== ownerEpoch) return;
     if (!confirm('Replace your current progress with this save?')) {
       return;
     }
-
+    resetFlight();
+    cancelArcade();
     s = parsed;
     offline();
     hideComet();
@@ -1122,17 +1225,17 @@ $('file').onchange = async event => {
     toast('That file is not a valid Stardust save.');
   }
 };
-
 $('reset').onclick = () => {
   if (
     !confirm(
-      'Erase ALL progress, including cores and achievements? ' +
+      'Erase this account’s progress, including cores and achievements? ' +
       'Export first if you want a backup.'
     )
   ) {
     return;
   }
-
+  resetFlight();
+  cancelArcade();
   s = fresh();
   last = Date.now();
   hideComet();
@@ -1140,36 +1243,29 @@ $('reset').onclick = () => {
   render();
   toast('Your universe has been reset.');
 };
-
 setInterval(() => {
-  if (document.hidden) return;
-
+  if (!activeUser || document.hidden) return;
   advance();
   const now = Date.now();
-
   if (cometUntil && now > cometUntil) hideComet();
-
-  if (!cometUntil && now >= nextComet) {
+  if (currentPage === 'clicker' && !cometUntil && now >= nextComet) {
     $('comet').hidden = false;
     $('comet').style.left = (10 + Math.random() * 50) + '%';
     $('comet').style.top = (15 + Math.random() * 45) + '%';
     cometUntil = now + 12000;
     toast('A shooting star appeared!');
   }
-
   render();
 }, 200);
-
 setInterval(() => {
-  if (!document.hidden) {
+  if (activeUser && !document.hidden) {
     advance();
     save();
   }
 }, 15000);
-
 document.addEventListener('visibilitychange', () => {
+  if (!activeUser) return;
   advance();
-
   if (document.hidden) {
     hideComet();
     save();
@@ -1178,15 +1274,502 @@ document.addEventListener('visibilitychange', () => {
     render();
   }
 });
-
 window.addEventListener('pagehide', () => {
   advance();
   save();
 });
+$('extraUpgrades').innerHTML = extraDefs.map((d,i) => `<button class="upgrade" id="extra${i}"><span>${d[0]} ${d[1]}<small id="extraLevel${i}"></small></span><strong id="extraPrice${i}"></strong></button>`).join('');
+extraDefs.forEach((d,i) => $('extra'+i).onclick = () => {
+  advance(); const cost = extraCost(i);
+  if (s.extras[i] >= 20 || s.dust < cost) return;
+  s.dust -= cost; s.extras[i]++;
+  purchasePop(d[0], d[1]+' · Lv '+s.extras[i]); sound(750); render(); save();
+});
+$('secret').onclick = () => {
+  advance(); earn(100000000); purchasePop('✦', '+100,000,000 Stardust'); check(); render(); save();
+};
+$('arcadeOffer').onclick = openArcade;
+$('closeGame').onclick = cancelArcade;
+$('arcade').addEventListener('cancel', event => { event.preventDefault(); cancelArcade(); });
+setInterval(() => {
+  if (!activeUser || currentPage !== 'clicker' || document.hidden || game) return;
+  const now = Date.now();
+  if (offerUntil && now > offerUntil) cancelArcade();
+  if (!offerUntil && now >= nextArcade && s.dust >= 10) {
+    offerUntil = now + 25000; $('arcadeOffer').hidden = false;
+    toast('Cosmic arcade is open beside your star for 25 seconds!');
+  }
+}, 1000);
+// Password verifiers are salted; account data remains local and editable by the browser owner.
+function bytesHex(bytes) { return Array.from(bytes, n => n.toString(16).padStart(2,'0')).join(''); }
+async function passwordVerifier(password, salt) {
+  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveBits']);
+  const bits = await crypto.subtle.deriveBits({name:'PBKDF2',salt:Uint8Array.from(salt.match(/../g), h => parseInt(h,16)),iterations:600000,hash:'SHA-256'}, key, 256);
+  return bytesHex(new Uint8Array(bits));
+}
+function setAuthMode(mode) {
+  if (authBusy) return;
+  authMode = mode;
+  const signup = mode === 'signup';
+  $('signupFields').hidden = !signup;
+  $('confirmPassword').required = signup;
+  $('password').autocomplete = signup ? 'new-password' : 'current-password';
+  $('authSubmit').textContent = signup ? 'Create account' : 'Log in';
+  $('loginTab').classList.toggle('selected', !signup);
+  $('signupTab').classList.toggle('selected', signup);
+  $('loginTab').setAttribute('aria-pressed', !signup);
+  $('signupTab').setAttribute('aria-pressed', signup);
+  $('authMessage').textContent = '';
+  $('password').value = ''; $('confirmPassword').value = '';
+  try { $('legacyOption').hidden = !localStorage.getItem(KEY); } catch { $('legacyOption').hidden = true; }
+}
+function enterAccount(account, progress) {
+  activeUser = {id:account.id, name:account.name, guest:account.guest === true}; sessionEpoch++;
+  s = progress; storageWarned = false;
+  $('toasts').replaceChildren(); $('purchasePops').replaceChildren();
+  cancelArcade(); hideComet(); nextArcade = Date.now() + 45000;
+  fleetSignature = ''; offline();
+  $('authScreen').hidden = true;
+  $('gameShell').hidden = false; $('gameShell').inert = false;
+  $('accountName').textContent = activeUser.guest ? 'Guest explorer' : 'Explorer: ' + account.name;
+  $('logout').textContent = activeUser.guest ? 'Exit guest' : 'Log out';
+  $('password').value = ''; $('confirmPassword').value = '';
+  resetFlight(); showGamePage('clicker');
+  resetChat();
+  $('chatUsername').disabled = activeUser.guest;
+  $('chatOpenButton').disabled = activeUser.guest;
+  refreshChat();
+  render(); save(); $('star').focus();
+}
+$('loginTab').onclick = () => setAuthMode('login');
+$('signupTab').onclick = () => setAuthMode('signup');
+$('authForm').onsubmit = async event => {
+  event.preventDefault();
+  if (authBusy || !$('authForm').reportValidity()) return;
+  const name = $('username').value.trim(); const id = name.toLowerCase();
+  const password = $('password').value;
+  if (!/^[a-zA-Z0-9_]{3,24}$/.test(name) || password.length < 8 || password.length > 128) {
+    $('authMessage').textContent = 'Use a valid username and a password of 8–128 characters.'; return;
+  }
+  if (authMode === 'signup' && password !== $('confirmPassword').value) {
+    $('authMessage').textContent = 'The passwords do not match.'; return;
+  }
+  authBusy = true; $('authSubmit').disabled = true; $('playGuest').disabled = true;
+  $('authMessage').textContent = 'Opening your universe…';
+  try {
+    if (!globalThis.crypto?.subtle) throw Error('This browser cannot run password login here. Open the game in a current browser using HTTPS or localhost.');
+    const raw = localStorage.getItem(ACCOUNT_PREFIX + id);
+    let account, progress;
+    if (authMode === 'signup') {
+      if (raw) throw Error('That username is already taken in this browser.');
+      progress = fresh();
+      if ($('useLegacy').checked) {
+        const legacy = localStorage.getItem(KEY);
+        if (legacy) progress = valid(JSON.parse(legacy));
+      }
+      const salt = bytesHex(crypto.getRandomValues(new Uint8Array(16)));
+      account = {version:1,id,name,salt,verifier:await passwordVerifier(password,salt)};
+      if (localStorage.getItem(ACCOUNT_PREFIX + id)) throw Error('That username was just created. Please log in.');
+      // The account record commits only after its initial save succeeds.
+      localStorage.setItem(SAVE_PREFIX + id, JSON.stringify(progress));
+      localStorage.setItem(ACCOUNT_PREFIX + id, JSON.stringify(account));
+    } else {
+      if (!raw) throw Error('Incorrect username or password.');
+      account = JSON.parse(raw);
+      if (account.version !== 1 || account.id !== id || !/^[a-f0-9]{32}$/.test(account.salt) || !/^[a-f0-9]{64}$/.test(account.verifier)) throw Error('This account record is damaged.');
+      if (await passwordVerifier(password,account.salt) !== account.verifier) throw Error('Incorrect username or password.');
+      const saved = localStorage.getItem(SAVE_PREFIX + id);
+      if (!saved) throw Error('This account’s save is missing.');
+      try { progress = valid(JSON.parse(saved)); } catch { throw Error('This account’s save is damaged. It has not been overwritten.'); }
+    }
+    enterAccount(account, progress);
+    $('authMessage').textContent = '';
+  } catch (error) {
+    $('authMessage').textContent = error.name === 'QuotaExceededError' || error.name === 'SecurityError'
+      ? 'Browser storage is unavailable or full. Enable storage to use local accounts.'
+      : error.message || 'Could not open this account.';
+  } finally { authBusy = false; $('authSubmit').disabled = false; $('playGuest').disabled = false; }
+};
+$('playGuest').onclick = () => {
+  if (authBusy || activeUser) return;
+  let raw = null;
+  try { raw = localStorage.getItem(SAVE_PREFIX + ':guest'); } catch {}
+  let progress = fresh();
+  if (raw) {
+    try { progress = valid(JSON.parse(raw)); }
+    catch { $('authMessage').textContent = 'The guest save is damaged. It has not been overwritten. You can create an account to start a new game.'; return; }
+  }
+  enterAccount({id:':guest',name:'Guest',guest:true},progress);
+};
+$('logout').onclick = () => {
+  if (!activeUser) return;
+  const wasGuest = activeUser.guest;
+  advance();
+  if (!save() && !confirm('The latest progress could not be saved. Log out anyway? Cancel to export a backup first.')) return;
+  cancelArcade(); hideComet();
+  resetFlight(); showGamePage('clicker');
+  resetChat();
+  activeUser = null; sessionEpoch++; s = fresh(); last = Date.now();
+  $('gameShell').hidden = true; $('gameShell').inert = true;
+  $('authScreen').hidden = false; $('accountName').textContent = '';
+  $('toasts').replaceChildren(); $('purchasePops').replaceChildren();
+  setAuthMode('login'); $('authMessage').textContent = wasGuest ? 'Guest session ended. Choose Play as Guest to continue your guest save.' : 'Logged out.'; $('password').focus();
+};
+function resetChat() {
+  chatPeer = null; chatSignature = '';
+  $('chatUsername').value = ''; $('chatText').value = '';
+  $('chatStatus').textContent = ''; $('chatUnread').textContent = '';
+  $('chatContacts').replaceChildren(); $('chatMessages').replaceChildren();
+  $('chatWith').textContent = 'Choose an explorer';
+  $('chatText').disabled = true; $('chatSendButton').disabled = true;
+}
+function getLocalExplorer(id) {
+  const raw = localStorage.getItem(ACCOUNT_PREFIX + id);
+  if (!raw) return null;
+  const account = JSON.parse(raw);
+  return account.id === id && typeof account.name === 'string' ? {id, name:account.name} : null;
+}
+function localMessages() {
+  const messages = [];
+  for (let i=0; i<localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (!key?.startsWith(MESSAGE_PREFIX)) continue;
+    try {
+      const m = JSON.parse(localStorage.getItem(key));
+      if (m && key === MESSAGE_PREFIX+m.id && /^[a-z0-9_]{3,24}$/.test(m.from) && /^[a-z0-9_]{3,24}$/.test(m.to) && typeof m.text === 'string' && m.text.length <= 1000 && Number.isFinite(m.time) && (m.from === activeUser.id || m.to === activeUser.id)) messages.push(m);
+    } catch {} // Ignore unrelated damaged records without overwriting them.
+  }
+  return messages.sort((a,b) => a.time-b.time || a.id.localeCompare(b.id));
+}
+function openConversation(peer) {
+  if (!activeUser || activeUser.guest) return;
+  chatPeer = peer; chatSignature = ''; $('chatText').value = '';
+  $('chatUsername').value = peer.name;
+  $('chatStatus').textContent = '';
+  $('chatText').disabled = false; $('chatSendButton').disabled = false;
+  refreshChat(); $('chatText').focus();
+}
+function refreshChat() {
+  if (!activeUser) return;
+  if (activeUser.guest) {
+    $('chatStatus').textContent = 'Create an account or log in to use Explorer chat. Guest mode includes the clicker and Rocket Flight.';
+    return;
+  }
+  try {
+    const messages = localMessages();
+    const thread = chatPeer ? messages.filter(m => m.from === chatPeer.id || m.to === chatPeer.id) : [];
+    if (chatPeer && !document.hidden) {
+      for (const m of thread) if (m.to === activeUser.id && !localStorage.getItem(READ_PREFIX+m.id)) localStorage.setItem(READ_PREFIX+m.id,'1');
+    }
+    const unread = messages.filter(m => m.to === activeUser.id && !localStorage.getItem(READ_PREFIX+m.id));
+    $('chatUnread').textContent = unread.length ? '('+unread.length+' unread)' : '';
+    const signature = JSON.stringify([activeUser.id,chatPeer?.id,messages,unread.map(m=>m.id)]);
+    if (signature === chatSignature) return;
+    chatSignature = signature;
+    const peers = new Map();
+    for (const m of messages.slice().reverse()) {
+      const id = m.from === activeUser.id ? m.to : m.from;
+      if (!peers.has(id)) peers.set(id, getLocalExplorer(id) || {id,name:id});
+    }
+    if (chatPeer && !peers.has(chatPeer.id)) peers.set(chatPeer.id,chatPeer);
+    $('chatContacts').replaceChildren();
+    if (!peers.size) $('chatContacts').textContent = 'No conversations yet.';
+    for (const peer of peers.values()) {
+      const b = document.createElement('button'); b.type='button';
+      const count=unread.filter(m=>m.from===peer.id).length;
+      b.textContent = peer.name + (count ? ' · '+count+' new' : '');
+      b.classList.toggle('selected',chatPeer?.id===peer.id);
+      b.onclick=()=>openConversation(peer); $('chatContacts').append(b);
+    }
+    $('chatMessages').replaceChildren();
+    $('chatWith').textContent = chatPeer ? 'Chat with '+chatPeer.name : 'Choose an explorer';
+    if (!thread.length) $('chatMessages').textContent = chatPeer ? 'No messages yet. Say hello!' : 'Enter a username above or open a conversation.';
+    for (const m of thread.slice(-200)) {
+      const bubble=document.createElement('div'); bubble.className='chat-bubble'+(m.from===activeUser.id?' mine':'');
+      const body=document.createElement('p'); body.textContent=m.text;
+      const meta=document.createElement('small'); meta.textContent=(m.from===activeUser.id?'You':chatPeer.name)+' · '+new Date(m.time).toLocaleString();
+      bubble.append(body); bubble.append(meta); $('chatMessages').append(bubble);
+    }
+    $('chatMessages').scrollTop=$('chatMessages').scrollHeight;
+  } catch { $('chatStatus').textContent='Could not access chat storage. Check your browser’s storage settings.'; }
+}
+$('chatFind').onsubmit = event => {
+  event.preventDefault(); if (!activeUser || activeUser.guest) return;
+  const id=$('chatUsername').value.trim().toLowerCase();
+  try {
+    if (!/^[a-z0-9_]{3,24}$/.test(id)) throw Error('Enter a valid username.');
+    if (id===activeUser.id) throw Error('Enter another explorer’s username.');
+    const peer=getLocalExplorer(id);
+    if (!peer) throw Error('No account with that username in this browser. They need to create one here first.');
+    openConversation(peer);
+  } catch(error) { $('chatStatus').textContent=error.message || 'Could not open that conversation.'; }
+};
+$('chatSend').onsubmit = event => {
+  event.preventDefault(); if (!activeUser || activeUser.guest || !chatPeer) return;
+  const text=$('chatText').value.trim();
+  if (!text || text.length>1000) { $('chatStatus').textContent='Write a message of 1–1,000 characters.'; return; }
+  try {
+    if (!getLocalExplorer(chatPeer.id)) throw Error('That local account no longer exists.');
+    const id=Date.now().toString(36)+'-'+bytesHex(crypto.getRandomValues(new Uint8Array(12)));
+    const m={id,from:activeUser.id,to:chatPeer.id,text,time:Date.now()};
+    // One key per message avoids overwriting messages sent from another open tab.
+    localStorage.setItem(MESSAGE_PREFIX+id,JSON.stringify(m));
+    $('chatText').value=''; $('chatStatus').textContent='Message saved to their local inbox.';
+    refreshChat(); $('chatText').focus();
+  } catch(error) { $('chatStatus').textContent=error.name==='QuotaExceededError'?'Storage is full. Message was not sent.':error.message || 'Message could not be saved.'; }
+};
+window.addEventListener('storage',event=>{
+  if (event.key?.startsWith(MESSAGE_PREFIX) || event.key?.startsWith(READ_PREFIX)) refreshChat();
+});
+setInterval(()=>{ if(activeUser && !document.hidden) refreshChat(); },2000);
+// Self-contained WebGL scene: perspective-projected 3D geometry, no external assets.
+let flightRenderer = null;
+let flightUnavailable = false;
+let flightFrame = 0;
+let flightPrevious = 0;
+const flightKeys = new Set();
+const flightUpgradeDefs = [
+  {name:'🛡 Reinforced hull',cost:250,max:5,description:'Survive one extra asteroid hit per level.'},
+  {name:'🧲 Crystal collector',cost:400,max:5,description:'Increase crystal collection radius by 0.22 per level.'},
+  {name:'💎 Crystal refinery',cost:600,max:8,description:'Multiply Stardust per crystal by 1.5 per level.'}
+];
+function flightUpgradeCost(i) { return flightUpgradeDefs[i].cost * 3 ** s.flightUpgrades[i]; }
+function flightLoadout() {
+  return {maxHull:3+s.flightUpgrades[0],pickupRadius:.76+.22*s.flightUpgrades[1],reward:Math.ceil(Math.min(1000000,Math.max(5,Math.ceil(power()*2+cps()*.5))) * 1.5 ** s.flightUpgrades[2])};
+}
+function renderFlightShop() {
+  if (!$('flightShopBalance')) return;
+  $('flightShopBalance').textContent=fmt(s.dust);
+  flightUpgradeDefs.forEach((d,i)=>{
+    const button=$('flightBuy'+i);if(!button)return;
+    const level=s.flightUpgrades[i], maxed=level>=d.max;
+    $('flightLevel'+i).textContent='Level '+level+' / '+d.max;
+    const details=[(3+level)+' hull points',(.76+.22*level).toFixed(2)+' collection radius',(1.5**level).toFixed(2)+'× crystal value'];
+    $('flightEffect'+i).textContent=details[i];
+    button.disabled=!activeUser || maxed || s.dust<flightUpgradeCost(i);
+    button.textContent=maxed?'Fully upgraded':'Upgrade · '+fmt(flightUpgradeCost(i))+' ✦';
+  });
+}
+function buyFlightUpgrade(i) {
+  if(!activeUser || !Number.isInteger(i) || !flightUpgradeDefs[i])return;
+  advance();const d=flightUpgradeDefs[i],cost=flightUpgradeCost(i);
+  if(s.flightUpgrades[i]>=d.max || s.dust<cost)return;
+  s.dust=Math.max(0,s.dust-cost);s.flightUpgrades[i]++;
+  $('flightShopStatus').textContent=d.name+' upgraded to level '+s.flightUpgrades[i]+'. Ready for your next new flight.';
+  sound(800);render();save();
+}
+const flight = {state:'ready',x:0,y:0,yaw:0,bankAngle:0,pointerLean:0,time:60,hull:3,maxHull:3,pickupRadius:.76,bank:0,reward:5,speed:24,invulnerable:0,objects:[],travel:0,feedbackUntil:0};
+function showGamePage(page) {
+  if (page !== 'flight') pauseFlight();
+  currentPage = page;
+  $('clickerPage').hidden = page !== 'clicker'; $('flightPage').hidden = page !== 'flight';
+  $('clickerTab').classList.toggle('selected',page==='clicker'); $('flightTab').classList.toggle('selected',page==='flight');
+  $('clickerTab').setAttribute('aria-pressed',page==='clicker'); $('flightTab').setAttribute('aria-pressed',page==='flight');
+  if(page==='flight') {
+    cancelArcade(); hideComet();
+    try {
+      if (!flightRenderer) flightRenderer = createFlightRenderer($('flightCanvas'));
+      if (!flightFrame) {flightPrevious=0;flightFrame=requestAnimationFrame(flightLoop);}
+    } catch(error) {
+      flightUnavailable=true;
+      $('flightTitle').textContent='3D unavailable';
+      $('flightDescription').textContent='This browser could not start WebGL. Try enabling hardware acceleration or use another browser. Your clicker progress is safe.';
+      $('flightOverlay').hidden=false; $('flightStart').disabled=true;
+    }
+  } else if(flightFrame) {cancelAnimationFrame(flightFrame);flightFrame=0;}
+}
+function resetFlight() {
+  flightKeys.clear(); flight.state='ready'; flight.x=0;flight.y=0;flight.yaw=0;flight.bankAngle=0;flight.pointerLean=0;flight.time=60;Object.assign(flight,flightLoadout());flight.hull=flight.maxHull;flight.bank=0;flight.travel=0;flight.objects=[];flight.invulnerable=0;
+  $('flightTitle').textContent='STAR DIVER';
+  $('flightDescription').textContent='Pilot your rocket through an asteroid field. Collect glowing gold crystals to earn Stardust for your account.';
+  $('flightStart').textContent='Launch rocket'; $('flightStart').disabled=flightUnavailable;
+  $('flightOverlay').hidden=false; $('flightPause').disabled=true; $('flightFeedback').textContent='';$('flightShopStatus').textContent='';updateFlightHud();
+}
+function spawnFlightObject(kind,z) {
+  return {kind,x:(Math.random()-.5)*12,y:(Math.random()-.5)*7,z,size:kind==='dust'?.34:.55+Math.random()*.45,spin:Math.random()*6.28};
+}
+function launchFlight() {
+  if(!activeUser || flightUnavailable || !flightRenderer) return;
+  if(flight.state==='paused') {flight.state='running';flightPrevious=0;$('flightOverlay').hidden=true;$('flightPause').disabled=false;$('flightCanvas').focus();return;}
+  resetFlight(); flight.state='running';
+  Object.assign(flight,flightLoadout());flight.hull=flight.maxHull;
+  for(let i=0;i<36;i++) flight.objects.push(spawnFlightObject('dust',-12-i*4));
+  for(let i=0;i<19;i++) flight.objects.push(spawnFlightObject('rock',-24-i*7));
+  // First crystals make the flight path easy to learn.
+  flight.objects[0].x=0;flight.objects[0].y=0;
+  flight.objects[1].x=0;flight.objects[1].y=0;
+  $('flightOverlay').hidden=true;$('flightPause').disabled=false;flightPrevious=0;
+  updateFlightHud();$('flightCanvas').focus();
+}
+function updateFlightHud() {
+  $('flightBank').textContent=fmt(flight.bank)+' ✦';$('flightHull').textContent=flight.hull+' / '+flight.maxHull+' ♥';
+  $('flightTimer').textContent=Math.ceil(flight.time)+'s';$('flightReward').textContent=fmt(flight.reward)+' Stardust per crystal';
+}
+function pauseFlight() {
+  flightKeys.clear();
+  if(flight.state!=='running') return;
+  flight.state='paused';$('flightTitle').textContent='FLIGHT PAUSED';
+  $('flightDescription').textContent=fmt(flight.bank)+' Stardust banked. Resume when you’re ready.';
+  $('flightStart').textContent='Resume flight';$('flightOverlay').hidden=false;$('flightPause').disabled=true;
+  if(activeUser) {advance();save();}
+}
+function endFlight() {
+  if(flight.state!=='running') return;
+  flight.state='finished';flightKeys.clear();
+  $('flightTitle').textContent=flight.hull?'EXPEDITION COMPLETE':'HULL CRITICAL';
+  $('flightDescription').textContent=fmt(flight.bank)+' Stardust collected and added to your account. '+(flight.hull?'Ready for another run?':'Your rescue beacon brought you home. Your earnings are safe.');
+  $('flightStart').textContent='Fly again';$('flightOverlay').hidden=false;$('flightPause').disabled=true;
+  advance();save();render();
+}
+function stepFlight(dt) {
+  if(flight.state!=='running' || !activeUser) return;
+  flight.time=Math.max(0,flight.time-dt); flight.speed=24+(60-flight.time)*.24;
+  flight.invulnerable=Math.max(0,flight.invulnerable-dt);
+  let dx=(flightKeys.has('d')||flightKeys.has('arrowright')?1:0)-(flightKeys.has('a')||flightKeys.has('arrowleft')?1:0);
+  let dy=(flightKeys.has('w')||flightKeys.has('arrowup')?1:0)-(flightKeys.has('s')||flightKeys.has('arrowdown')?1:0);
+  // Exponential easing stays smooth at different frame rates and settles on release.
+  const steer = dx || flight.pointerLean;
+  const ease = 1-Math.exp(-9*dt);
+  flight.yaw += (-steer*.26-flight.yaw)*ease;
+  flight.bankAngle += (-steer*.38-flight.bankAngle)*ease;
+  flight.pointerLean *= Math.exp(-12*dt);
+  const norm=Math.hypot(dx,dy)||1;
+  flight.x=Math.max(-6,Math.min(6,flight.x+dx/norm*7*dt));flight.y=Math.max(-3.5,Math.min(3.5,flight.y+dy/norm*7*dt));
+  flight.travel+=flight.speed*dt;
+  for(const o of flight.objects) {
+    const oldZ=o.z;o.z+=flight.speed*dt;o.spin+=dt;
+    // Swept depth test prevents pickups or hits being skipped between frames.
+    if(oldZ<.8 && o.z>-.8 && Math.hypot(o.x-flight.x,o.y-flight.y)<(o.kind==='dust'?flight.pickupRadius:o.size+.42)) {
+      if(o.kind==='dust') {
+        advance();const previous=s.dust;earn(flight.reward);const credited=s.dust-previous;flight.bank+=credited;
+        $('flightFeedback').textContent='+'+fmt(credited)+' Stardust';flight.feedbackUntil=performance.now()+700;
+        sound(1100);check();save();o.z=5;
+      } else if(!flight.invulnerable) {
+        flight.hull--;flight.invulnerable=1.6;
+        $('flightFeedback').textContent='Asteroid hit!';flight.feedbackUntil=performance.now()+1000;sound(170);o.z=5;
+      }
+    }
+    if(o.z>4) Object.assign(o,spawnFlightObject(o.kind,-145-Math.random()*25));
+    if(!flight.hull) break;
+  }
+  updateFlightHud();
+  if(flight.time<=0 || flight.hull<=0) endFlight();
+}
+function flightLoop(now) {
+  flightFrame=0;
+  if(currentPage!=='flight' || !activeUser || !flightRenderer) return;
+  const elapsed=flightPrevious?(now-flightPrevious)/1000:0;flightPrevious=now;
+  if(document.hidden || elapsed>.5) pauseFlight();
+  let remaining=Math.min(elapsed,.5);
+  while(remaining>0 && flight.state==='running') {const dt=Math.min(remaining,1/60);stepFlight(dt);remaining-=dt;}
+  if(now>flight.feedbackUntil) $('flightFeedback').textContent='';
+  flightRenderer.draw(now/1000);
+  flightFrame=requestAnimationFrame(flightLoop);
+}
+function createFlightRenderer(canvas) {
+  const gl=canvas.getContext('webgl',{alpha:true,antialias:true});
+  if(!gl) throw Error('WebGL is unavailable');
+  const vertex=`attribute vec3 aPosition;attribute vec3 aNormal;
+uniform vec3 uPosition;uniform vec3 uScale;uniform vec2 uRotation;uniform vec2 uRigRotation;uniform vec3 uRigPivot;uniform float uAspect;uniform float uPointSize;varying float vLight;varying float vDepth;
+void main(){float cy=cos(uRotation.x),sy=sin(uRotation.x),cz=cos(uRotation.y),sz=sin(uRotation.y);
+mat3 ry=mat3(cy,0.,-sy,0.,1.,0.,sy,0.,cy);mat3 rz=mat3(cz,sz,0.,-sz,cz,0.,0.,0.,1.);
+float rc=cos(uRigRotation.x),rs=sin(uRigRotation.x),bc=cos(uRigRotation.y),bs=sin(uRigRotation.y);
+mat3 rigYaw=mat3(rc,0.,-rs,0.,1.,0.,rs,0.,rc);mat3 rigBank=mat3(bc,bs,0.,-bs,bc,0.,0.,0.,1.);mat3 rig=rigBank*rigYaw;
+vec3 world=rig*(rz*ry*(aPosition*uScale)+uPosition-uRigPivot)+uRigPivot;vec3 n=normalize(rig*rz*ry*aNormal);
+vLight=.36+.64*max(0.,dot(n,normalize(vec3(-.5,.8,.7))));
+vec3 p=world-vec3(0.,1.5,10.);float c=cos(.10),s=sin(.10);p=vec3(p.x,c*p.y-s*p.z,s*p.y+c*p.z);
+vDepth=-p.z;float f=min(1.85,uAspect*1.15);gl_Position=vec4(p.x*f/uAspect,p.y*f,(-220.1/219.9)*p.z-(44./219.9),-p.z);gl_PointSize=uPointSize;}`;
+  const fragment=`precision mediump float;uniform vec3 uColor;uniform float uGlow;uniform float uPoints;varying float vLight;varying float vDepth;
+void main(){if(uPoints>.5 && length(gl_PointCoord-vec2(.5))>.5)discard;
+vec3 color=uColor*mix(vLight,1.,uGlow);float fog=smoothstep(80.,210.,vDepth);gl_FragColor=vec4(mix(color,vec3(.025,.038,.095),fog*.85),1.);}`;
+  function shader(type,source) {const sh=gl.createShader(type);gl.shaderSource(sh,source);gl.compileShader(sh);if(!gl.getShaderParameter(sh,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(sh));return sh;}
+  const program=gl.createProgram();gl.attachShader(program,shader(gl.VERTEX_SHADER,vertex));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,fragment));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error('Shader link failed');gl.useProgram(program);
+  const locations={};for(const name of ['uPosition','uScale','uRotation','uRigRotation','uRigPivot','uAspect','uPointSize','uColor','uGlow','uPoints'])locations[name]=gl.getUniformLocation(program,name);
+  const pos=gl.getAttribLocation(program,'aPosition'),normal=gl.getAttribLocation(program,'aNormal');
+  function mesh(triangles,points=false) {
+    const vertices=[];
+    if(points) {for(const v of triangles)vertices.push(...v,0,1,0);} else for(let i=0;i<triangles.length;i+=3) {
+      const [a,b,c]=triangles.slice(i,i+3),u=b.map((n,j)=>n-a[j]),v=c.map((n,j)=>n-a[j]);
+      const n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]],len=Math.hypot(...n)||1;
+      for(const p of [a,b,c])vertices.push(...p,...n.map(x=>x/len));
+    }
+    const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(vertices),gl.STATIC_DRAW);return {buffer,count:vertices.length/6,points};
+  }
+  function cylinder(frontRadius,backRadius) {const verts=[];for(let i=0;i<12;i++){let a=i*Math.PI/6,b=(i+1)*Math.PI/6;const p=[Math.cos(a)*frontRadius,Math.sin(a)*frontRadius,-1],q=[Math.cos(b)*frontRadius,Math.sin(b)*frontRadius,-1],r=[Math.cos(a)*backRadius,Math.sin(a)*backRadius,1],t=[Math.cos(b)*backRadius,Math.sin(b)*backRadius,1];verts.push(p,r,q,q,r,t,[0,0,-1],q,p,[0,0,1],r,t);}return mesh(verts);}
+  function sphere(){const v=[];function point(a,b){return [Math.cos(a)*Math.sin(b),Math.cos(b),Math.sin(a)*Math.sin(b)];}for(let j=0;j<8;j++)for(let i=0;i<12;i++){let a=i*Math.PI/6,b=(i+1)*Math.PI/6,c=j*Math.PI/8,d=(j+1)*Math.PI/8;v.push(point(a,c),point(a,d),point(b,c),point(b,c),point(a,d),point(b,d));}return mesh(v);}
+  const orb=sphere(),body=cylinder(1,1),nose=cylinder(0,1),flame=cylinder(1,0);
+  const gem=mesh([[0,1,0],[-1,0,0],[0,0,1],[0,1,0],[0,0,1],[1,0,0],[0,1,0],[1,0,0],[0,0,-1],[0,1,0],[0,0,-1],[-1,0,0],[0,-1,0],[0,0,1],[-1,0,0],[0,-1,0],[1,0,0],[0,0,1],[0,-1,0],[0,0,-1],[1,0,0],[0,-1,0],[-1,0,0],[0,0,-1]]);
+  const fin=mesh([[0,0,-.6],[.8,0,1],[0,0,.8],[0,.08,-.6],[0,.08,.8],[.8,.08,1],[0,0,-.6],[0,.08,-.6],[.8,0,1],[.8,0,1],[0,.08,-.6],[.8,.08,1]]);
+  const stars=mesh(Array.from({length:1000},()=>[(Math.random()-.5)*240,(Math.random()-.5)*150,-Math.random()*200]),true);
+  function drawMesh(m,position,scale,color,rotation=[0,0],glow=0) {
+    gl.bindBuffer(gl.ARRAY_BUFFER,m.buffer);gl.enableVertexAttribArray(pos);gl.enableVertexAttribArray(normal);gl.vertexAttribPointer(pos,3,gl.FLOAT,false,24,0);gl.vertexAttribPointer(normal,3,gl.FLOAT,false,24,12);
+    gl.uniform3fv(locations.uPosition,position);gl.uniform3fv(locations.uScale,scale);gl.uniform2fv(locations.uRotation,rotation);gl.uniform3fv(locations.uColor,color);gl.uniform1f(locations.uGlow,glow);gl.uniform1f(locations.uPoints,m.points?1:0);
+    gl.drawArrays(m.points?gl.POINTS:gl.TRIANGLES,0,m.count);
+  }
+  gl.enable(gl.DEPTH_TEST);gl.clearColor(0,0,0,0);
+  canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();pauseFlight();flightUnavailable=true;cancelAnimationFrame(flightFrame);flightFrame=0;$('flightTitle').textContent='3D connection interrupted';$('flightDescription').textContent='Reload the page to restore the 3D scene. Banked Stardust is saved.';$('flightStart').disabled=true;$('flightOverlay').hidden=false;});
+  return {draw(t) {
+    if(flightUnavailable)return;
+    const rect=canvas.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);const w=Math.max(1,Math.floor(rect.width*dpr)),h=Math.max(1,Math.floor(rect.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
+    gl.viewport(0,0,w,h);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.uniform1f(locations.uAspect,w/h);gl.uniform1f(locations.uPointSize,Math.max(1.5,dpr*1.5));
+    drawMesh(stars,[-flight.x*.12,-flight.y*.12,(flight.travel*.18)%30],[1,1,1],[.7,.85,1],[0,0],1);
+    drawMesh(orb,[24,9,-90],[17,17,17],[.21,.29,.58],[t*.012,.2]);drawMesh(orb,[-30,-17,-130],[11,11,11],[.27,.12,.38]);
+    for(const o of flight.objects) {
+      const q=o.size;
+      if(o.kind==='dust') {drawMesh(gem,[o.x,o.y,o.z],[q,q*1.4,q],[1,.72,.14],[o.spin,o.spin*.5],.85);}
+      else drawMesh(orb,[o.x,o.y,o.z],[q,q*.8,q*1.12],[.36,.31,.34],[o.spin*.4,o.spin*.2]);
+    }
+    const x=flight.x,y=flight.y;
+    // Rotate the full rocket assembly (including fins and exhaust) about its center.
+    gl.uniform2fv(locations.uRigRotation,[flight.yaw,flight.bankAngle]);
+    gl.uniform3fv(locations.uRigPivot,[x,y,0]);
+    if(!(flight.invulnerable>0 && Math.floor(t*12)%2===0)) {
+      drawMesh(body,[x,y,.1],[.25,.25,.65],[.79,.87,.96]);
+      drawMesh(nose,[x,y,-.88],[.25,.25,.34],[.15,.72,.85]);
+      drawMesh(body,[x,y,.73],[.29,.29,.10],[.12,.2,.32]);
+      drawMesh(orb,[x,y+.19,-.25],[.17,.10,.25],[.18,.8,1],[0,0],.65);
+      drawMesh(fin,[x+.12,y,.25],[1,1,1],[.25,.62,.76]);drawMesh(fin,[x-.12,y,.25],[-1,1,1],[.25,.62,.76]);
+      drawMesh(fin,[x,y+.12,.25],[.7,1,1],[.25,.62,.76],[0,Math.PI/2]);
+      const burn=flight.state==='running'?1.0+.15*Math.sin(t*40):.25;
+      drawMesh(flame,[x,y,1.1+burn*.25],[.22,.22,burn*.65],[.12,.65,1],[0,0],1);
+      drawMesh(flame,[x,y,.94+burn*.15],[.12,.12,burn*.35],[.75,.95,1],[0,0],1);
+    }
+    // Scene objects must not inherit the rocket's bank on the next frame.
+    gl.uniform2fv(locations.uRigRotation,[0,0]);
+    gl.uniform3fv(locations.uRigPivot,[0,0,0]);
+  }};
+}
+$('clickerTab').onclick=()=>showGamePage('clicker');$('flightTab').onclick=()=>showGamePage('flight');
+$('flightStart').onclick=launchFlight;$('flightPause').onclick=pauseFlight;
+$('flightFullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await $('flightStage').requestFullscreen();}catch{$('flightFeedback').textContent='Full screen is unavailable in this browser.';flight.feedbackUntil=performance.now()+3000;}};
+document.addEventListener('keydown',event=>{
+  if(!activeUser || currentPage!=='flight' || /INPUT|TEXTAREA/.test(event.target.tagName))return;
+  const key=event.key.toLowerCase();
+  if(['arrowup','arrowdown','arrowleft','arrowright','w','a','s','d','p'].includes(key))event.preventDefault();
+  if(key==='p' && !event.repeat){if(flight.state==='running')pauseFlight();else if(flight.state==='paused')launchFlight();return;}
+  flightKeys.add(key);
+});
+document.addEventListener('keyup',event=>flightKeys.delete(event.key.toLowerCase()));
+window.addEventListener('blur',pauseFlight);document.addEventListener('visibilitychange',()=>{if(document.hidden)pauseFlight();});
+let flightPointer=null;
+function steerPointer(event) {
+  if(flightPointer!==event.pointerId || flight.state!=='running')return;
+  const rect=$('flightCanvas').getBoundingClientRect();
+  const targetX=Math.max(-6,Math.min(6,((event.clientX-rect.left)/rect.width-.5)*12));
+  flight.pointerLean=Math.max(-1,Math.min(1,(targetX-flight.x)*2));
+  flight.x=targetX;
+  flight.y=Math.max(-3.5,Math.min(3.5,(.5-(event.clientY-rect.top)/rect.height)*7));
+}
+$('flightCanvas').addEventListener('pointerdown',event=>{flightPointer=event.pointerId;$('flightCanvas').setPointerCapture(event.pointerId);steerPointer(event);});
+$('flightCanvas').addEventListener('pointermove',steerPointer);
+for(const event of ['pointerup','pointercancel','lostpointercapture'])$('flightCanvas').addEventListener(event,()=>{flightPointer=null;});
+$('flightShop').innerHTML=flightUpgradeDefs.map((d,i)=>`<article class="flight-upgrade-card"><h3>${d.name}</h3><small id="flightLevel${i}"></small><p>${d.description}</p><strong id="flightEffect${i}"></strong><button id="flightBuy${i}"></button></article>`).join('');
+flightUpgradeDefs.forEach((d,i)=>$('flightBuy'+i).onclick=()=>buyFlightUpgrade(i));
+resetFlight();
 
-check();
+setAuthMode('login');
 render();
-save();
+
 </script>
 </body>
 </html>
